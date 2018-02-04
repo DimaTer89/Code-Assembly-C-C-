@@ -1,3 +1,5 @@
+include <iostream>
+using namespace std;
 setlocale(LC_ALL, "rus");
 	srand(time(0));
 	int a[N], b[M], c[N + M] = {};
