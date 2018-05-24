@@ -5,48 +5,143 @@ using namespace std;
 
 class drobi
 {
-	int chis1;
-	int chis2;
-	int znam1;
-	int znam2;
+	int chis;
+	int znam;
+	
 public:
-	drobi(int a, int b, int c, int d)
+	drobi(int a, int b)
 	{
-		chis1 = a;
-		znam1 = b;
-		chis2 = c;
-		znam2 = d;
+		chis = a;
+		znam = b;
 	}
-	void show(char c) 
+	void show() 
 	{
-		cout << chis1 << "/" << znam1 << c << chis2 << "/" << znam2 << "=";
+		cout << chis << "/" << znam<<endl;
 	}
-	//void sum(int, int, int, int);
-	//void minus(int, int, int, int);
-	void umnoj();
-	//void del(int, int, int, int);
+	void redux() {
+		int num = 2;
+		while (num <= chis && num <= znam) {
+			if (chis%num == 0 && znam%num == 0) {
+				chis /= num;
+				znam /= num;
+				num = 2;
+			}
+			num++;
+		}
+	}
+	void sum(int chis1, int znam1) {
+		if (znam == znam1) {
+			chis += chis1;
+		}
+		else {
+			chis = chis * znam1 + znam * chis1;
+			znam *= znam1;
+		}
+		redux();
+	}
+	void minus(int chis1, int znam1) {
+		if (znam == znam1) {
+			chis -= chis1;
+		}
+		else {
+			chis = chis * znam1 - znam * chis1;
+			znam *= znam1;
+		}
+		redux();
+	}
+	void umnoj(int chis1, int znam1)
+	{
+		chis *= chis1;
+		znam *= znam1;
+		redux();
+	}
+	void delen(int chis1,int znam1) {
+		int tmp = chis1;
+		chis1 = znam1;
+		znam1 = tmp;
+		chis *= chis1;
+		znam *= znam1;
+		redux();
+	}
 };
-void drobi::umnoj()
-{
-	chis1 *= chis2;
-	znam1 *= znam2;
-	cout << chis1 << "/" << znam1 << endl;
-}
 void main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-	int chis1, znam1, chis2, znam2;
-	cout << " Введите числитель и знаменатель первой дроби через пробел : ";
-	cin >> chis1 >> znam1;
-	cout << " Введите числитель и знаменатель второй дроби через пробел : ";
-	cin >> chis2 >> znam2;
-	drobi drob(chis1, znam1, chis2, znam2);
-	drob.show('*');
-	drob.umnoj();
+	int chis, znam, chis1, znam1;
+	char menu;
+	cout << " Введите числитель : ";
+	cin >> chis;
+	cout << " Введите знаменатель : ";
+	cin >> znam;
+	drobi drob(chis, znam);
+	do {
+		int num;
+		cout << " Текущая дробь : ";
+		drob.redux();
+		drob.show();
+		cout << " 1 - сложение дробей \n";
+		cout << " 2 - вычитание дробей \n";
+		cout << " 3 - умножение дробей \n";
+		cout << " 4 - деление дробей \n";
+		cin >> num;
+		switch (num) {
+		case 1:
+			cout << " Введите числитель : ";
+			cin >> chis1;
+			cout << " Введите знаменатель : ";
+			do {
+				cin >> znam1;
+				if(znam1==0)cout << " Введите снова , знаменатель не может быть равен нулю . ";
+			} while (znam1 == 0);
+			drob.sum(chis1, znam1);
+			cout << " Результат = ";
+			drob.show();
+			break;
+		case 2:
+			cout << " Введите числитель : ";
+			cin >> chis1;
+			cout << " Введите знаменатель : ";
+			do {
+				cin >> znam1;
+				if (znam1 == 0)cout << " Введите снова , знаменатель не может быть равен нулю . ";
+			} while (znam1 == 0);
+			drob.minus(chis1, znam1);
+			cout << " Результат = ";
+			drob.show();
+			break;
+		case 3:
+			cout << " Введите числитель : ";
+			cin >> chis1;
+			cout << " Введите знаменатель : ";
+			do {
+				cin >> znam1;
+				if (znam1 == 0)cout << " Введите снова , знаменатель не может быть равен нулю . ";
+			} while (znam1 == 0);
+			drob.umnoj(chis1, znam1);
+			cout << " Результат = ";
+			drob.show();
+			break;
+		case 4:
+			cout << " Введите числитель : ";
+			cin >> chis1;
+			cout << " Введите знаменатель : ";
+			do {
+				cin >> znam1;
+				if (znam1 == 0)cout << " Введите снова , знаменатель не может быть равен нулю . ";
+			} while (znam1 == 0);
+			drob.delen(chis1, znam1);
+			cout << " Результат = ";
+			drob.show();
+			break;
+		};
+		cout << " Продолжить : y/n ";
+		cin >> menu;
+	} while (menu != 'n');
 	system("pause");
 }
+
 =============================================
 	#include <iostream>
 #include <windows.h>
