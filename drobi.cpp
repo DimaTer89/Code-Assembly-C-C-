@@ -16,15 +16,17 @@ public:
 	}
 	void show() 
 	{
-		cout << chis << "/" << znam<<endl;
+		if (znam == 1)cout << chis << endl;
+		else
+		   cout << chis << "/" << znam<<endl;
 	}
 	void redux() {
-		int num = 2;
+		int num = 1;
 		while (num <= chis && num <= znam) {
 			if (chis%num == 0 && znam%num == 0) {
 				chis /= num;
 				znam /= num;
-				num = 2;
+				num = 1;
 			}
 			num++;
 		}
@@ -56,11 +58,8 @@ public:
 		redux();
 	}
 	void delen(int chis1,int znam1) {
-		int tmp = chis1;
-		chis1 = znam1;
-		znam1 = tmp;
-		chis *= chis1;
-		znam *= znam1;
+		chis *= znam1;
+		znam *= chis1;
 		redux();
 	}
 };
@@ -71,13 +70,13 @@ void main()
 
 	int chis, znam, chis1, znam1;
 	char menu;
+	int num;
 	cout << " Введите числитель : ";
 	cin >> chis;
 	cout << " Введите знаменатель : ";
 	cin >> znam;
 	drobi drob(chis, znam);
 	do {
-		int num;
 		cout << " Текущая дробь : ";
 		drob.redux();
 		drob.show();
@@ -141,6 +140,8 @@ void main()
 	} while (menu != 'n');
 	system("pause");
 }
+
+
 
 =============================================
 	#include <iostream>
