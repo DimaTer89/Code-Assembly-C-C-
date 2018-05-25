@@ -74,7 +74,10 @@ void main()
 	cout << " Введите числитель : ";
 	cin >> chis;
 	cout << " Введите знаменатель : ";
-	cin >> znam;
+	do {
+		cin >> znam;
+		if (znam == 0)cout << " Введите снова , знаменатель не может быть равен нулю . ";
+	} while (znam == 0);
 	drobi drob(chis, znam);
 	do {
 		cout << " Текущая дробь : ";
@@ -140,6 +143,8 @@ void main()
 	} while (menu != 'n');
 	system("pause");
 }
+
+
 
 
 
