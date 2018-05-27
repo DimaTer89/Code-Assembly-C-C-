@@ -34,6 +34,7 @@ public:
 		str = new char[strlen(tmp) + 1];
 		strcpy(str, tmp);
 		cout << " Строка после изменения : " << str << endl;
+		num_obj++;
 	}
 
 	~String()
@@ -62,6 +63,7 @@ void main()
 	cout << " Введите строку : ";
 	gets_s(arr, N);
 	String ob_2(" Привет , как дела ?", arr);
+	cout << " Количество объектов : " << String::num_obj << endl;
 	delete[] arr;
 	system("pause");
 }
