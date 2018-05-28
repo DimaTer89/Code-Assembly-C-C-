@@ -68,7 +68,7 @@ void main()
 	system("pause");
 }
 =============================================
-	#include <iostream>
+#include <iostream>
 #include <windows.h>
 using namespace std;
 
@@ -101,7 +101,7 @@ public:
 		cout << " Конструктор, который создаёт строку и инициализирует её строкой, полученной от пользователя. \n";
 		str = new char[strlen(s) + 1];
 		strcpy(str, s);
-		cout << " Строка после изменения : " << str << endl;
+		cout << " Строка полученная от пользователя : " << str << endl;
 		num_obj++;
 	}
 
@@ -120,7 +120,8 @@ void main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	int num;
-	char stroka[256];
+	const int N = 1000000;
+	char stroka[N];
 	String str;
 	cout << " Количество объектов : " << String::num_obj << endl;
 	cout << " Введите размер строки : ";
@@ -128,8 +129,9 @@ void main()
 	String str_1(num);
 	cout << " Количество объектов : " << String::num_obj << endl;
 	cout << " Введите строку : ";
-	gets_s(stroka, 256);
+	gets_s(stroka, N);
 	String str_2(stroka);
 	cout << " Количество объектов : " << String::num_obj << endl;
 	system("pause");
 }
+
