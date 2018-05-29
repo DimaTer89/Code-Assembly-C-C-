@@ -28,11 +28,11 @@ public:
 	void init()
 	{
 		cout << " Фамилия : ";
-		cin >> fio.fam;
+		cin >> this->fio.fam;
 		cout << " Имя : ";
-		cin >> fio.name;
+		cin >> this->fio.name;
 		cout << " Отчество : ";
-		cin>> fio.otch;
+		cin >> this->fio.otch;
 	}
 	void show()
 	{
@@ -40,27 +40,56 @@ public:
 		cout << " Имя : " << fio.name << endl;
 		cout << " Отчество : " << fio.otch << endl;
 	}
+	Human* dob_hum(Human* ob, int &kol)
+	{
+		
+		Human* tmp = new Human[kol];
+		for (int i = 0; i < kol; i++)
+		{
+		strcpy(tmp[i].fio.fam, ob[i].fio.fam);
+		strcpy(tmp[i].fio.name, ob[i].fio.name);
+		strcpy(tmp[i].fio.otch, ob[i].fio.otch);
+		}
+		delete[]ob;
+		ob = new Human[kol+1];
+		for (int i = 0; i < kol; i++)
+		{
+		strcpy(ob[i].fio.fam, tmp[i].fio.fam);
+		strcpy(ob[i].fio.name, tmp[i].fio.name);
+		strcpy(ob[i].fio.otch, tmp[i].fio.otch);
+		}
+		delete[]tmp;
+		ob[kol].init();
+		kol++;
+		return ob;
+	}
 };
 class Apartament
 {
 public:
-	
+
 	Human* chel;
 	int kol_kom;
 	int num;
 	int stage;
-	Apartament(int a,int b,int c)
+	Apartament(Human* ob,int a, int b, int c,int kol)
 	{
-		chel = new Human;
+		chel = new Human[kol];
+		for (int i = 0; i < kol; i++)
+		{
+			strcpy(this->chel[i].fio.fam, ob[i].fio.fam);
+			strcpy(this->chel[i].fio.name, ob[i].fio.name);
+			strcpy(this->chel[i].fio.otch, ob[i].fio.otch);
+		}
 		kol_kom = a;
 		num = b;
 		stage = c;
 	}
 	void show()
 	{
-		cout << " Фамилия : " << chel->fio.fam << endl;
-		cout << " Имя : " << chel->fio.name << endl;
-		cout << " Отчество : " << chel->fio.otch << endl;
+		cout << " Фамилия : " << this->chel->fio.fam << endl;
+		cout << " Имя : " << this->chel->fio.name << endl;
+		cout << " Отчество : " << this->chel->fio.otch << endl;
 		cout << " Этаж : " << this->stage << endl;
 		cout << " Номер квартиры : " << this->num << endl;
 		cout << " Количество комнат : " << this->kol_kom << endl;
@@ -76,29 +105,11 @@ void main()
 	int stage;
 	Human* ob;
 	ob = new Human[1];
+	ob->init();
 	cout << " Введите количество кoмнат в квартире , номер квартиры и этаж через пробел : ";
 	cin >> kol_kom >> num >> stage;
-	Apartament ob_1(kol_kom, num, stage);
-	if (kol)
-	{
-		Human* tmp = new Human[kol];
-		for (int i = 0; i < kol; i++)
-		{
-			strcpy(tmp[i].fio.fam, ob[i].fio.fam);
-			strcpy(tmp[i].fio.name, ob[i].fio.name);
-			strcpy(tmp[i].fio.otch, ob[i].fio.otch);
-		}
-		delete[]tmp;
-		ob = new Human[kol];
-		for (int i = 0; i < kol; i++)
-		{
-			strcpy(ob[i].fio.fam, tmp[i].fio.fam);
-			strcpy(ob[i].fio.name, tmp[i].fio.name);
-			strcpy(ob[i].fio.otch, tmp[i].fio.otch);
-		}
-		delete[]tmp;
-	}
-	ob[kol].init();
+	kol++;
+	Apartament ob_1(ob,kol_kom, num, stage,kol);
 	kol++;
 	ob_1.show();
 	system("pause");
