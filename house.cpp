@@ -30,10 +30,11 @@ public:
 	}
 	void init()
 	{
+		while (cin.get() != '\n');
 		cout << " Введите ФИО : ";
-		cin.getline(body.person, N);
+		cin.getline(body.person,N);
 		cout << " Введите профессию : ";
-		cin.getline(body.profess, N);
+		cin.getline(body.profess,N);
 	}
 	void show()
 	{
@@ -78,11 +79,12 @@ public:
 			soul[i].init();
 		}
 			cout << " Введите количество комнат : ";
-			cin >> kol_kom;
+			cin>>kol_kom;
 			cout << " Введите номер квартиры : ";
 			cin >> num_kv;
 			cout << " Введите этаж : ";
 			cin >> stage;
+			while (cin.get() != '\n');
 	}
 	void show()
 	{
