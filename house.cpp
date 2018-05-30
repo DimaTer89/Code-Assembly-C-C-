@@ -2,7 +2,7 @@
 #include <windows.h>
 #define N 128
 using namespace std;
-
+static int num_jil = 0;
 class Human
 {
 public:
@@ -30,6 +30,12 @@ public:
 	}
 	void init()
 	{
+		delete[]body.person;
+		body.person = NULL;
+		delete[]body.profess;
+		body.profess = NULL;
+		body.person = new char[N];
+		body.profess = new char[N];
 		while (cin.get() != '\n');
 		cout << " Введите ФИО : ";
 		cin.getline(body.person,N);
@@ -55,7 +61,6 @@ public:
 		
 		kol_kom=0;
 		stage=0;
-		num_kv=0;
 		kol_jil=0;
 	}
 	Flat(const Flat& ob)
@@ -70,27 +75,28 @@ public:
 	void init()
 	{
 		int i;
-		cout << " Введите количество жильцов : ";
-		cin >> kol_jil;
+		cout << " Введите количество комнат : ";
+		cin>>kol_kom;
+		cout << " Введите этаж : ";
+		cin >> stage;
+		while (cin.get() != '\n');
+		
 		soul = new Human[kol_jil];
 		for (i = 0; i < kol_jil; i++)
 		{
-			cout << " Квартирант № " << i + 1 << endl;
+		    cout << " Квартирант № " << i + 1 << endl;
 			soul[i].init();
 		}
-			cout << " Введите количество комнат : ";
-			cin>>kol_kom;
-			cout << " Введите номер квартиры : ";
-			cin >> num_kv;
-			cout << " Введите этаж : ";
-			cin >> stage;
-			while (cin.get() != '\n');
 	}
 	void show()
 	{
 			cout << " Количество комнат : " << kol_kom << endl;
 			cout << " Номер квартиры : " << num_kv << endl;
 			cout << " Этаж : " << stage << endl;
+			for (int i = 0; i < kol_jil; i++)
+			{
+				soul[i].show();
+			}
 		
 	}
 
@@ -99,23 +105,13 @@ void main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	/*Human ob;
-	ob.init();
-	ob.show();*/
+	int kol_jil;
 	int kol;
 	Flat* ob_1;
-	cout << " Введите количество квартир : ";
-	cin >> kol;
-	ob_1 = new Flat[kol];
-	for (int i = 0; i < kol; i++)
-	{
-		ob_1[i].init();
-
-	}
-	for (int i = 0; i < kol; i++)
-	{
-		ob_1[i].soul->show();
-		ob_1[i].show();
-	}
+	cout << " Введите количество жильцов : ";
+	cin >> kol_jil;
+	ob_1 = new Flat[kol_jil];
+	ob_1->init();
+	ob_1->show();
 	system("pause");
 }
