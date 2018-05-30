@@ -18,8 +18,10 @@ public:
 	}
 	Human(const Human& ob)
 	{
-		body.person = ob.body.person;
-		body.profess = ob.body.profess;
+		body.person = new char[strlen(ob.body.person) + 1];
+		strcpy(body.person, ob.body.person);
+		body.profess = new char[strlen(ob.body.profess) + 1];
+		strcpy(body.profess, ob.body.profess);
 	}
 	~Human()
 	{
@@ -38,9 +40,9 @@ public:
 		body.profess = new char[N];
 		while (cin.get() != '\n');
 		cout << " Введите ФИО : ";
-		cin.getline(body.person,N);
+		cin.getline(body.person, N);
 		cout << " Введите профессию : ";
-		cin.getline(body.profess,N);
+		cin.getline(body.profess, N);
 	}
 	void show()
 	{
@@ -54,14 +56,11 @@ public:
 	Human* soul;
 	int kol_kom;
 	int stage;
-	int num_kv;
 	int kol_jil;
+	int num_flat;
 	Flat()
 	{
-		
-		kol_kom=0;
-		stage=0;
-		kol_jil=0;
+		kol_jil = kol_kom = stage = num_flat = 0;
 	}
 	Flat(const Flat& ob)
 	{
@@ -75,29 +74,31 @@ public:
 	void init()
 	{
 		int i;
+		cout << " Введите этаж : ";
+		cin >> num_flat;
+		cout << " Введите количество жильцов : ";
+		cin >> kol_jil;
 		cout << " Введите количество комнат : ";
-		cin>>kol_kom;
+		cin >> kol_kom;
 		cout << " Введите этаж : ";
 		cin >> stage;
-		while (cin.get() != '\n');
-		
 		soul = new Human[kol_jil];
 		for (i = 0; i < kol_jil; i++)
 		{
-		    cout << " Квартирант № " << i + 1 << endl;
+			cout << " Квартирант № " << i + 1 << endl;
 			soul[i].init();
 		}
 	}
 	void show()
 	{
-			cout << " Количество комнат : " << kol_kom << endl;
-			cout << " Номер квартиры : " << num_kv << endl;
-			cout << " Этаж : " << stage << endl;
-			for (int i = 0; i < kol_jil; i++)
-			{
-				soul[i].show();
-			}
-		
+		cout << " Количество комнат : " << kol_kom << endl;
+		cout << " Этаж : " << stage << endl;
+		cout << " Жильцы : \n ";
+		for (int i = 0; i < kol_jil; i++)
+		{
+			soul[i].show();
+		}
+
 	}
 
 };
@@ -105,12 +106,9 @@ void main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	int kol_jil;
-	int kol;
+	
 	Flat* ob_1;
-	cout << " Введите количество жильцов : ";
-	cin >> kol_jil;
-	ob_1 = new Flat[kol_jil];
+	ob_1 = new Flat[1];
 	ob_1->init();
 	ob_1->show();
 	system("pause");
