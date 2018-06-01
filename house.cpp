@@ -106,7 +106,7 @@ public:
 	House()
 	{
 		num = kol_kv = 0;
-		dom = new Flat;
+		dom = new Flat[1];
 	}
 	~House()
 	{
@@ -223,13 +223,13 @@ int main()
 					break;
 				case 2:
 					cout << " Введите номер квартиры для изменения : ";
-	         		cin >> num_kv;
-			     	for (int i = 0; i < kol; i++)
-				    {
-					      if (apar.dom->num_flat == num_kv)apar.dom[i].init();
-				    }
-				break;
-			    }
+					cin >> num_kv;
+					for (int i = 0; i < kol; i++)
+					{
+						if (apar.dom->num_flat == num_kv)apar.dom[i].init();
+					}
+					break;
+				}
 			}
 			break;
 		case 4:
