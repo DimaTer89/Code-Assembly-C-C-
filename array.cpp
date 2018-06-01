@@ -9,13 +9,18 @@
 using namespace std;
 class Array
 {
-		
+
 public:
 	int* arr;
 	int size;
 	Array()
 	{
-		size = 0;
+		size = 1;
+		arr = new int[size];
+		for (int i = 0; i < size; i++)
+		{
+			arr[i] = 0;
+		}
 	}
 	Array(const Array& obj)
 	{
@@ -42,7 +47,7 @@ public:
 		for (i = 0; i < size; i++)
 		{
 			system("cls");
-			cout << " Введите " << i + 1 <<" элемент массива : ";
+			cout << " Введите " << i + 1 << " элемент массива : ";
 			cin >> arr[i];
 		}
 	}
@@ -75,26 +80,24 @@ public:
 				if (arr[i] > arr[i + 1])
 				{
 					int tmp = arr[i];
-					arr[i] = arr[i+1];
+					arr[i] = arr[i + 1];
 					arr[i + 1] = tmp;
 				}
 			}
 		}
 	}
-	/*void arr_change(Array obj, int& size,int num)
+	void arr_change(int num)
 	{
-		int i;
-		int j;
-		int* arr_new=new int[num];
-		for (i = 0,j=0; i < num; i++,j++)
-		{
-			arr_new[j] = arr[i];
-		}
-		delete[]arr;
-		arr = arr_new;
-		size = num;
-		
-	}*/
+	int i;
+	int* arr_new=new int[num];
+	for (i = 0; i < num; i++)
+	{
+	    arr_new[i] = arr[i];
+	}
+	delete[]arr;
+	arr = arr_new;
+	size = num;
+	}
 	int maxElem()
 	{
 		int max = arr[0];
@@ -121,10 +124,15 @@ int main()
 	srand(time(0));
 	Array obj;
 	int size;
+	int num;
 	cout << " Введите размер массива : ";
 	cin >> size;
 	obj.init(size);
 	obj.put_rand_arr();
+	obj.show();
+	cout << " Введите размер массива : ";
+	cin >> num;
+	obj.arr_change(num);
 	obj.show();
 	cout << " Максимальный элемент массива = " << obj.maxElem() << endl;
 	cout << " Минимальный элемент массива = " << obj.minElem() << endl;
@@ -145,9 +153,9 @@ using namespace std;
 template <class X>
 class Array
 {
-		
+
 public:
-	X* arr;
+	X * arr;
 	int size;
 	Array()
 	{
@@ -173,6 +181,7 @@ public:
 	void put_rand_arr();
 	void show();
 	void sort();
+	void arr_change(int num);
 	X maxElem();
 	X minElem();
 };
@@ -182,7 +191,7 @@ template <class X> void Array<X>::init(int n)
 	size = n;
 	arr = new X[size];
 }
- template <class X> void Array<X>::put_arr()
+template <class X> void Array<X>::put_arr()
 {
 	int i;
 	for (i = 0; i < size; i++)
@@ -192,7 +201,7 @@ template <class X> void Array<X>::init(int n)
 		cin >> arr[i];
 	}
 }
- template <class X> void Array<X>::put_rand_arr()
+template <class X> void Array<X>::put_rand_arr()
 {
 	int i;
 	for (i = 0; i < size; i++)
@@ -200,7 +209,7 @@ template <class X> void Array<X>::init(int n)
 		arr[i] = rand() % 51 - 50;
 	}
 }
- template <class X> void Array<X>::show()
+template <class X> void Array<X>::show()
 {
 	int i;
 	cout << " Массив : ";
@@ -210,7 +219,7 @@ template <class X> void Array<X>::init(int n)
 	}
 	cout << endl;
 }
- template <class X> void Array<X>::sort()
+template <class X> void Array<X>::sort()
 {
 	int i;
 	int k;
@@ -227,7 +236,19 @@ template <class X> void Array<X>::init(int n)
 		}
 	}
 }
- template <class X> X Array<X>::maxElem()
+template <class X> void Array<X>::arr_change(int num)
+{
+	int i;
+	X* arr_new = new X[num];
+	for (i = 0; i < num; i++)
+	{
+		arr_new[i] = arr[i];
+	}
+	delete[]arr;
+	arr = arr_new;
+	size = num;
+}
+template <class X> X Array<X>::maxElem()
 {
 	X max = arr[0];
 	for (int i = 0; i < size; i++)
@@ -236,7 +257,7 @@ template <class X> void Array<X>::init(int n)
 	}
 	return max;
 }
- template <class X> X Array<X>::minElem()
+template <class X> X Array<X>::minElem()
 {
 	X min = arr[0];
 	for (int i = 0; i < size; i++)
@@ -252,16 +273,21 @@ int main()
 	srand(time(0));
 	Array <int> obj;
 	int size;
+	int num;
 	cout << " Введите размер массива : ";
 	cin >> size;
 	obj.init(size);
 	obj.put_rand_arr();
 	obj.show();
+	cout << " Введите размер массива : ";
+	cin >> num;
+	obj.arr_change(num);
+	obj.show();
 	cout << " Максимальный элемент массива = " << obj.maxElem() << endl;
 	cout << " Минимальный элемент массива = " << obj.minElem() << endl;
 	obj.sort();
 	obj.show();
-	Array <double> obj_1;
+	/*Array <double> obj_1;
 	cout << " Введите размер массива : ";
 	cin >> size;
 	obj_1.init(size);
@@ -280,6 +306,6 @@ int main()
 	cout << " Максимальный элемент массива = " << obj_2.maxElem() << endl;
 	cout << " Минимальный элемент массива = " << obj_2.minElem() << endl;
 	obj_2.sort();
-	obj_2.show();
+	obj_2.show();*/
 	system("pause");
 }
