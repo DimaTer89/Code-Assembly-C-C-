@@ -33,9 +33,9 @@ public:
 		person = new char[N];
 		profess = new char[N];
 		cout << " Введите ФИО : ";
-		gets_s(person, 35);
+		gets_s(person, N);
 		cout << " Введите профессию : ";
-		gets_s(profess, 35);
+		gets_s(profess, N);
 	}
 	void show()
 	{
@@ -51,9 +51,11 @@ public:
 	int stage;
 	int kol_jil;
 	int num_flat;
+	double area;
 	Flat()
 	{
 		kol_jil = kol_kom = stage = num_flat = 0;
+		area = 0;
 		soul = new Human[1];
 	}
 	Flat(const Flat& ob)
@@ -74,6 +76,8 @@ public:
 		cin >> stage;
 		cout << " Введите количество комнат : ";
 		cin >> kol_kom;
+		cout << " Введите площадь квартиры  : ";
+		cin >> area;
 		cout << " Введите количество жильцов : ";
 		cin >> kol_jil;
 		cin.ignore();
@@ -89,6 +93,7 @@ public:
 		cout << " Номер квартиры : " << num_flat << endl;
 		cout << " Этаж : " << stage << endl;
 		cout << " Количество комнат : " << kol_kom << endl;
+		cout << " Площадь квартиры : " << area << endl;
 		cout << " Жильцы : \n ";
 		for (int i = 0; i < kol_jil; i++)
 		{
@@ -101,27 +106,37 @@ class House
 {
 public:
 	Flat * dom;
+	char* adress;
 	int kol_kv;
 	int num;
 	House()
 	{
 		num = kol_kv = 0;
 		dom = new Flat[1];
+		adress = new char[1];
+	}
+	House(const House& ob)
+	{
+		dom = ob.dom;
+		adress = ob.adress;
 	}
 	~House()
 	{
 		delete[]dom;
 		dom = NULL;
+		delete[]adress;
+		adress = NULL;
 	}
-	void put(int a, int b)
+	void put(int a, int b, char* str)
 	{
 		num = a;
 		kol_kv = b;
+		adress = new char[strlen(str) + 1];
+		strcpy(adress, str);
 		dom = new Flat[kol_kv];
 	}
 	void init()
 	{
-		system("cls");
 		for (int i = 0; i < kol_kv; i++)
 		{
 			system("cls");
@@ -131,14 +146,17 @@ public:
 	}
 	void show()
 	{
-		cout << " =====================================\n";
+		cout << " =====================================\n\n";
+		cout << " Дом № " << num << endl;
+		cout << "\n\n";
+		cout << " Адресс : " << adress << endl;
 		for (int i = 0; i < kol_kv; i++)
 		{
 			dom[i].show();
-			cout << "\n\n";
+			cout << "\n";
 		}
+		cout << "=======================================\n";
 	}
-
 };
 int main()
 {
@@ -151,6 +169,7 @@ int main()
 	int menu;
 	int carte;
 	int num_kv;
+	char adress[100];
 	bool flag = false;
 	House apar;
 
@@ -170,9 +189,12 @@ int main()
 			{
 				cout << " Введите номер дома : ";
 				cin >> num;
+				cin.ignore();
+				cout << " Введите адрес : ";
+				gets_s(adress, 100);
 				cout << " Введите количество квартир : ";
 				cin >> kol;
-				apar.put(num, kol);
+				apar.put(num, kol,adress);
 				apar.init();
 				flag = true;
 				break;
@@ -180,6 +202,7 @@ int main()
 			else
 			{
 				cout << " Дом уже заполнен , если вас что то не устраивает , выберите пунк № 3 \n";
+				system("pause");
 				break;
 			}
 		case 2:
@@ -216,9 +239,12 @@ int main()
 				case 1:
 					cout << " Введите номер дома : ";
 					cin >> num;
+					cin.ignore();
+					cout << " Введите адрес : ";
+					gets_s(adress, 100);
 					cout << " Введите количество квартир : ";
 					cin >> kol;
-					apar.put(num, kol);
+					apar.put(num, kol,adress);
 					apar.init();
 					break;
 				case 2:
