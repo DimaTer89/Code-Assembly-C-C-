@@ -47,7 +47,7 @@ public:
 	{
 		FILE* in;
 		char buffer[256];
-		if (fopen_s(&in, "point_3dd.txt", "r") != NULL)
+		if (fopen_s(&in, "point_3d.txt", "r") != NULL)
 		{
 			cout << " Не удалось открыть файл чтения \n";
 			system("pause");
@@ -56,7 +56,7 @@ public:
 		fgets(buffer, sizeof(buffer), in);
 		char *word, *next;
 		word = strtok_s(buffer, " /", &next);
-		x=atof(word);
+		x = atof(word);
 		word = strtok_s(NULL, " /", &next);
 		y = atof(word);
 		word = strtok_s(NULL, " /", &next);
