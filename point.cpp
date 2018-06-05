@@ -99,6 +99,7 @@ int main()
 			break;
 		default:
 			cout << " Ошибка ввода !!!\n";
+			system("pause");
 			break;
 		}
 	} while (menu != 0);
