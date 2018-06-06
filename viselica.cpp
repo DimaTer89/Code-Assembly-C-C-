@@ -55,7 +55,6 @@ public:
 		{
 			kol++;
 		}
-		cout << kol << endl;
 		fseek(in, 0L, SEEK_SET);
 		slovo* slv = new slovo[kol];
 		char *w, *next;
@@ -65,7 +64,6 @@ public:
 			strcpy(slv[i].sl, w);
 		}
 		int i = rand() % 3;
-		cout << i << endl;
 		word = new char[strlen(slv[i].sl) + 1];
 		strcpy(word, slv[i].sl);
 	}
@@ -78,10 +76,12 @@ public:
 		}
 		char alfavit[] = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я','\0'};
 		cout << "\n";
+		int len = strlen(word);
 		int kol = 0;
 		int i = 0;
-		while (num >= 0&&kol<strlen(word))
+		while (num > 0&&kol<len)
 		{
+			system("cls");
 			bool flag = false;
 			cout << name << endl;
 			for (int i = 0; i < 32; i++)
@@ -92,7 +92,7 @@ public:
 			cout << " Количество попыток = " << num << endl;
 			cout << " Введите букву : ";
 			cin>>sim;
-			for (int i = 0; i < strlen(word); i++)
+			for (int i = 0; i < len; i++)
 			{
 				if (word[i]==sim)
 				{
@@ -103,8 +103,8 @@ public:
 			}
 			if(flag==false)num--;
 		}
-		if (kol == strlen(word))cout << " Вы выиграли \n";
-		if (kol < strlen(word))cout << " Вы проиграли \n";
+		if (kol == len)cout << " Вы выиграли \n";
+		if (kol < len)cout << " Вы проиграли \n";
 	}
 };
 int Visel::num = 10;
