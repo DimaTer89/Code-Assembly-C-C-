@@ -2,6 +2,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <time.h>
+#define N 256
 
 using namespace std;
 class Visel
@@ -39,11 +40,11 @@ public:
 	void getWord()
 	{
 		FILE* in;
-		char buffer[256];
-		int kol=0;
+		char buffer[N];
+		int kol = 0;
 		struct slovo
 		{
-			char sl[64];
+			char sl[N];
 		};
 		if (fopen_s(&in, "data.txt", "r") != NULL)
 		{
@@ -51,7 +52,7 @@ public:
 			system("pause");
 			return;
 		}
-		while (fgets(buffer, 256, in) != NULL)
+		while (fgets(buffer, N, in) != NULL)
 		{
 			kol++;
 		}
@@ -59,12 +60,12 @@ public:
 		slovo* slv = new slovo[kol];
 		char *w, *next;
 		for (int i = 0; i < kol; i++) {
-			fgets(buffer, 256, in);
+			fgets(buffer, N, in);
 			w = strtok_s(buffer, "\n", &next);
 			strcpy(slv[i].sl, w);
 		}
 		int i = rand() % 3;
-		word = new char[strlen(slv[i].sl) + 1];
+		word = new char[strlen(slv[i].sl)];
 		strcpy(word, slv[i].sl);
 	}
 	void play()
@@ -74,12 +75,12 @@ public:
 		{
 			name[i] = '*';
 		}
-		char alfavit[] = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я','\0'};
+		char alfavit[] = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я','\0' };
 		cout << "\n";
 		int len = strlen(word);
 		int kol = 0;
 		int i = 0;
-		while (num > 0&&kol<len)
+		while (num > 0 && kol<len)
 		{
 			system("cls");
 			bool flag = false;
@@ -91,17 +92,24 @@ public:
 			cout << endl;
 			cout << " Количество попыток = " << num << endl;
 			cout << " Введите букву : ";
-			cin>>sim;
+			cin >> sim;
 			for (int i = 0; i < len; i++)
 			{
-				if (word[i]==sim)
+				for (int j = 0; j < 33; j++)
+				{
+					if (alfavit[j] == sim)
+					{
+						alfavit[j] = ' ';
+					}
+				}
+				if (word[i] == sim)
 				{
 					kol++;
 					flag = true;
 					name[i] = sim;
 				}
 			}
-			if(flag==false)num--;
+			if (flag == false)num--;
 		}
 		if (kol == len)cout << " Вы выиграли \n";
 		if (kol < len)cout << " Вы проиграли \n";
@@ -114,7 +122,14 @@ int main()
 	SetConsoleOutputCP(1251);
 	srand(time(0));
 	Visel ob;
-	ob.getWord();
-	ob.play();
+	char key;
+	do 
+	{
+		ob.getWord();
+		ob.play();
+		cout << " Продолжить ? y/n \n";
+		cin >> key;
+
+	} while (key != 'n');
 	system("pause");
 }
