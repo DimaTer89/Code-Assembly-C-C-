@@ -78,9 +78,9 @@ public:
 		}
 		char alfavit[] = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я','\0'};
 		cout << "\n";
-		char ch;
+		int kol = 0;
 		int i = 0;
-		while (num >= 0)
+		while (num >= 0&&kol<strlen(word))
 		{
 			bool flag = false;
 			cout << name << endl;
@@ -91,17 +91,20 @@ public:
 			cout << endl;
 			cout << " Количество попыток = " << num << endl;
 			cout << " Введите букву : ";
-			cin>>ch;
+			cin>>sim;
 			for (int i = 0; i < strlen(word); i++)
 			{
-				if (word[i]==ch)
+				if (word[i]==sim)
 				{
+					kol++;
 					flag = true;
-					name[i] = ch;
+					name[i] = sim;
 				}
 			}
 			if(flag==false)num--;
 		}
+		if (kol == strlen(word))cout << " Вы выиграли \n";
+		if (kol < strlen(word))cout << " Вы проиграли \n";
 	}
 };
 int Visel::num = 10;
