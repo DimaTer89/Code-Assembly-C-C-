@@ -50,7 +50,7 @@ public:
 		{
 			cout << " Не удалось открыть файл для чтения \n";
 			system("pause");
-			return;
+			exit(0);
 		}
 		while (fgets(buffer, N, in) != NULL)
 		{
@@ -65,25 +65,26 @@ public:
 			strcpy(tmp, buffer);
 			strcpy(slv[i].sl, tmp);
 		}
-		int i = rand() % 3;
-		word = new char[strlen(slv[i].sl)+ 1];
+		int i = rand() % 5;
+		word = new char[strlen(slv[i].sl) + 1];
 		strcpy(word, slv[i].sl);
 		delete[]slv;
+		fclose(in);
 	}
 	void play()
 	{
-		char* name = new char[strlen(word)+1];
+		char* name = new char[strlen(word) + 1];
 		strcpy(name, word);
-		for (int i = 0; i < strlen(name)-1; i++)
+		for (int i = 0; i < strlen(name) - 1; i++)
 		{
 			name[i] = '*';
 		}
 		char alfavit[] = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я','\0' };
 		cout << "\n";
-		int len = strlen(word)-1;
+		int len = strlen(word) - 1;
 		int kol = 0;
 		int i;
-		while (num > 0&&kol!=len)
+		while (num > 0 && kol != len)
 		{
 			system("cls");
 			bool flag = false;
@@ -127,7 +128,7 @@ public:
 			cout << endl;
 			cout << " Вы выиграли \n";
 		}
-		if (kol < (len-1))
+		if (kol < (len - 1))
 		{
 			cout << " Вы проиграли \n";
 			cout << " Загаданное слово : " << word << endl;
