@@ -28,11 +28,6 @@ public:
 		}
 		word = NULL;
 	}
-	char get(char s)
-	{
-		sim = s;
-		return sim;
-	}
 	void show()
 	{
 		cout << word << endl;
