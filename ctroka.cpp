@@ -97,16 +97,16 @@ int main()
 	char stroka[256];
 	cout << " Введите строку : ";
 	gets_s(stroka, 256);
-	String ob;
-	ob.get(stroka);
-	ob.show();
 	String ob1;
-	cout << " Введите строку : ";
-	gets_s(stroka, 256);
 	ob1.get(stroka);
 	ob1.show();
 	String ob2;
-	ob2 = ob*ob1;
-	ob2.Showrez();
+	cout << " Введите строку : ";
+	gets_s(stroka, 256);
+	ob2.get(stroka);
+	ob2.show();
+	String ob3;
+	ob3 = ob1*ob2;
+	ob3.Showrez();
 	system("pause");
 }
