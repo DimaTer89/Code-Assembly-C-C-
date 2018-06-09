@@ -27,9 +27,9 @@ public:
 		cout << " Радиус окружности = " << radius << endl;
 		cout << " Длина окружности =  " <<C << endl;
 	}
-	bool operator ==(Circle ob);
-	bool operator >(Circle ob);
-	bool operator<(Circle ob);
+	bool operator == (Circle ob);
+	bool operator > (Circle ob);
+	bool operator < (Circle ob);
 	Circle operator +=(double data);
 	Circle operator-=(double data);
 };
