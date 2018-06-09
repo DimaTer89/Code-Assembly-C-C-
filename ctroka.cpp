@@ -41,6 +41,10 @@ public:
 	{
 		cout << " Введённая строка = "<< str << endl;
 	}
+	void Showrez()
+	{
+		cout << " Общая строка = " << str1 << endl;
+	}
 	String& operator *(String& ob);
 	String& operator=(String& ob);
 };
@@ -59,7 +63,7 @@ String& String::operator *(String& ob)
 			}
 		}
 	}
-	str1 = new char[tmp+2];
+	str1 = new char[tmp];
 	str1[0] = '\0';
 	for (int i = 0; i < len; i++)
 	{
@@ -67,7 +71,7 @@ String& String::operator *(String& ob)
 		{
 			if (str[i] == ob.str[j])
 			{
-				strcat(str1,&str[i]);
+				strncat(str1,&str[i],1);
 			}
 		}
 	}
@@ -97,13 +101,12 @@ int main()
 	ob.get(stroka);
 	ob.show();
 	String ob1;
-	cin.ignore();
 	cout << " Введите строку : ";
 	gets_s(stroka, 256);
 	ob1.get(stroka);
 	ob1.show();
 	String ob2;
 	ob2 = ob*ob1;
-	ob2.show();
+	ob2.Showrez();
 	system("pause");
 }
