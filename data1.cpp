@@ -366,3 +366,244 @@ void Print_stroka();
 	 bool operator ==(MyDate date);
 	 MyDate operator ++();
 };
+==============================================
+	#include <iostream>
+#include <iomanip>
+#include "MyDate.h"
+
+using namespace std;
+
+MyDate::MyDate()
+{
+	day_ = 1;
+	month_ = 1;
+	year_ = 1970;
+}
+
+MyDate::~MyDate()
+{
+}
+
+MyDate::MyDate(int day, int month, int year)
+{
+	SetYear(year);
+	SetMonth(month);
+	SetDay(day);
+}
+
+void MyDate::SetDay(unsigned int day)
+{
+	day_ = day;
+	if(day_ > daysInMonth[month_ - 1])
+  day_ = daysInMonth[month_ - 1];
+	if (!(year_ % 4)&&((month_-1)==1)&&day==29)day_=29;
+	if(day_ == 0)
+  day_ = 1;
+}
+
+void MyDate::SetMonth(unsigned int month)
+{
+	month_ = month;
+	if(month_ > 12)
+  month_ = 12;
+	if(month_ == 0)
+  month_ = 1;
+}
+
+void MyDate::SetYear(unsigned int year)
+{
+	year_ = year;
+ if(year_ < 1970)
+  year_ = 1970;
+}
+
+int MyDate::GetDay()
+{
+	return day_;
+}
+
+int MyDate::GetMonth()
+{
+	return month_;
+}
+
+int MyDate::GetYear()
+{
+	return year_;
+}
+
+int MyDate::GetDays()
+{
+	unsigned int days = year_ * 365;
+	days += (year_ -1)/ 4;
+
+	for (unsigned int m = 1; m < month_; m++)
+	{
+		
+		days += daysInMonth[m - 1];
+		if (!(year_ % 4)&&(m == 2))
+			day_++;
+	}
+	return days + day_;
+}
+
+void MyDate::Fill()
+{
+	unsigned int day, month, year;
+	cout << "Введите день: ";
+	cin >> day;
+	cout << "Введите месяц: ";
+	cin >> month;
+	cout << "Введите год: ";
+	cin >> year;
+
+	SetYear(year);
+	SetMonth(month);
+	SetDay(day);
+}
+
+void MyDate::Print(char separator)
+{
+	cout.fill('0');
+	cout << std::setw(2) << day_ << separator << std::setw(2) << month_ << separator << year_;
+}
+
+void MyDate::Print_stroka()
+{
+ char* separator=NULL;
+	cout.fill('0');
+ switch(month_)
+  {
+   case 1:
+    separator=(char*)"января";
+    break;
+   case 2:
+    separator=(char*)"февраля";
+    break;
+   case 3:
+    separator=(char*)"марта";
+    break;
+   case 4:
+    separator=(char*)"апреля";
+    break;
+   case 5:
+    separator=(char*)"мая";
+    break;
+   case 6:
+    separator=(char*)"июня";
+    break;
+   case 7:
+    separator=(char*)"июля";
+    break;
+   case 8:
+    separator=(char*)"августа";
+    break;
+   case 9:
+    separator=(char*)"сентября";
+    break;
+   case 10:
+    separator=(char*)"октября";
+    break;
+   case 11:
+    separator=(char*)"ноября";
+    break;
+   case 12:
+    separator=(char*)"декабря";
+    break;
+  }
+	cout << day_ << " " <<separator << " " << year_ << " года";
+}
+
+int MyDate::operator-(MyDate& date)
+{
+	return GetDays() - date.GetDays() - 1;
+}
+
+MyDate& MyDate::operator+(unsigned int days)
+{
+	if (days > 365)
+	{
+		year_ += days / 365;
+		days %= 365;
+	}
+
+	while (days > daysInMonth[month_ - 1])
+	{
+		days -= daysInMonth[month_ - 1];
+		month_++;
+		if (month_ > 12)
+		{
+			year_++;
+			month_ = 1;
+		}
+	}
+
+	day_ += days;
+
+	if (day_ > daysInMonth[month_ - 1])
+	{
+		day_ -= daysInMonth[month_ - 1];
+		month_++;
+		if (month_ > 12)
+		{
+			year_++;
+			month_ = 1;
+		}
+	}
+	return *this;
+}
+bool MyDate::operator>(MyDate date)
+{
+	if (GetDays() > date.GetDays())
+		return true;
+	else
+		return false;
+}
+bool MyDate::operator<(MyDate date)
+{
+	if (GetDays() < date.GetDays())
+		return true;
+	else
+		return false;
+}
+bool MyDate::operator==(MyDate date)
+{
+	if (GetDays() == date.GetDays())
+		return true;
+	else
+		return false;
+}
+MyDate MyDate::operator ++()
+{
+	int tmp = GetDay();
+	int tmp1[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	day_++;
+	if (!(year_ % 4))
+	{
+		if (day_ > tmp1[month_ - 1])
+		{
+		   day_ -= tmp1[month_ - 1];
+			month_++;
+		}
+		if (month_ > 12)
+		{
+			year_++;
+			month_ = 1;
+		}
+	}
+	else
+	{
+		if (day_ > daysInMonth[month_ - 1])
+		{
+			day_ -= daysInMonth[month_ - 1];
+			month_++;
+		}
+		if (month_ > 12)
+		{
+			year_++;
+			month_ = 1;
+		}
+		
+	}
+	return *this;
+}
