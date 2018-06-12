@@ -113,3 +113,106 @@ int main()
 	system("pause");
 	return 0;
 }
+============================================================
+	/*Создайте класс Circle (окружность):
+Реализуйте через перегруженные операторы;
+- Проверка на равенство радиусов двух окружностей (операция ==);
+- Сравнения длин двух окружностей (операция >).
+- Пропорциональное изменение размеров окружности, путем изменения ее радиуса
+(операция += и -=).*/
+#include <iostream>
+#include <Windows.h>
+using namespace std;
+
+class Circle
+{
+	double radius;
+	double C;
+public:
+	Circle(double radius = 1)
+	{
+		this->radius = radius;
+	}
+	Circle circumference()
+	{
+		C = 2 * 3.14*radius;
+		return *this;
+	}
+	void show()
+	{
+		cout << " Радиус окружности = " << radius << endl;
+		cout << " Длина окружности =  " << C << endl;
+	}
+	bool operator == (Circle ob);
+	bool operator > (Circle ob);
+	bool operator < (Circle ob);
+	Circle operator +=(double data);
+	Circle operator-=(double data);
+};
+bool Circle::operator==(Circle ob)
+{
+	if (radius == ob.radius)
+		return true;
+	else
+		return false;
+}
+bool Circle::operator>(Circle ob)
+{
+	if (C>ob.C)
+		return true;
+	else
+		return false;
+}
+bool Circle::operator<(Circle ob)
+{
+	if (C<ob.C)
+		return true;
+	else
+		return false;
+}
+Circle Circle::operator +=(double data)
+{
+	radius += data;
+	return *this;
+}
+Circle Circle::operator -=(double data)
+{
+	radius -= data;
+	return *this;
+}
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	double rad;
+	int menu;
+	Circle ob1;
+	Circle ob2;
+	cout << " Введите радиус первой окружности : ";
+	cin >> rad;
+	ob1 = rad;
+	cout << " Введите радиус второй окружности : ";
+	cin >> rad;
+	ob2 = rad;
+	cout << " 1 - Проверка на равенство радиусов двух окружностей\n"; 
+	cout << " 2	- Сравнения длин двух окружностей \n"; 
+	cout << " 3	- Изменение размеров окружности путем изменения ее радиуса\n";
+	cout << " 4 - Показать данные \n";
+	cout << " 5 - Выход \n";
+	cin >> menu;
+	switch (menu)
+	{
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	}
+	system("pause");
+	return 0;
+}
