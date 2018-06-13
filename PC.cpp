@@ -134,8 +134,27 @@ public:
 		garantia = NULL;
 	}
 	void show();
-	void save();
+	void save_file(PC* pc_save, int kol, char* filename, FILE* out);
 };
+void PC::save_file(PC* pc_save, int kol, char* filename, FILE* out)
+{
+	for (int i = 0; i < kol; i++)
+	{
+		fprintf(out, "%s / ", pc_save[i].proc);
+		fprintf(out, "%s / ", pc_save[i].ozu);
+		fprintf(out, "%d / ", pc_save[i].volume_ozu);
+		fprintf(out, "%s / ", pc_save[i].hard);
+		fprintf(out, "%d / ", pc_save[i].volume_hard);
+		fprintf(out, "%s / ", pc_save[i].videokard);
+		fprintf(out, "%s / ", pc_save[i].monitor);
+		fprintf(out, "%d / ", pc_save[i].size_monitor);
+		fprintf(out, "%s / ", pc_save[i].proiz);
+		fprintf(out, "%s / ", pc_save[i].month_year);
+		fprintf(out, "%s / \n", pc_save[i].garantia);
+
+	}
+		fclose(out);
+}
  void PC::show()
  {
 	 cout << "====================================\n";
@@ -259,6 +278,20 @@ public:
 			 system("pause");
 			 break;
 		 case 5:
+			 FILE* out;
+			 char filename[N];
+			 cin.ignore();
+			 cout << " Введите имя файла : ";
+			 gets_s(filename, N);
+			 if (fopen_s(&out, filename, "w") != NULL)
+			 {
+				 cout << " Не удалось открыть файл для записи \n";
+				 system("pause");
+				 break;
+			 }
+			 komp->save_file(komp, kol, filename,out);
+			 cout << " Успешно выполнено \n";
+			 system("pause");
 			 break;
 		 case 6:
 			 break;
