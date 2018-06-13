@@ -98,6 +98,14 @@ public:
 	{
 		return proc;
 	}
+	int size_ozu()
+	{
+		return volume_ozu;
+	}
+	int size_hard()
+	{
+		return volume_hard;
+	}
 	~PC()
 	{
 		if (proc)
@@ -160,11 +168,11 @@ public:
 	 int menu;
 	 cout << " Введите количество данных о компьютерах : ";
 	 cin >> kol;
+	 cin.ignore();
 	 PC* komp = new PC[kol];
 	 for (int i = 0; i < kol; i++)
 	 {
 		 system("cls");
-		 cin.ignore();
 		 cout << " Тип процессора : ";
 		 gets_s(CPU, N);
 		 cout << " Оперативная память (тип) : ";
@@ -192,13 +200,12 @@ public:
 		 cout << " Гарантийный срок : ";
 		 gets_s(garant,N);
 		 komp[i].init(CPU, ozu, size_ozu, hard, size_hard, video, monitor, size_mon, maker, month_year, garant);
-		 cin.ignore();
-	 }
+	}
 	 do
 	 {
 		 system("cls");
 		 cout << " 1 - Список компьютеров с заданным типом процессора \n";
-		 cout << " 2 - Список компьютеров с требуемым объёмом оперативной памяти и объёмом жёсткого диска больше или раной заданной\n";
+		 cout << " 2 - Список компьютеров с требуемым объёмом оперативной памяти и объёмом жёсткого диска больше или равной заданной\n";
 		 cout << " 3 - Подсчитать количество компьютеров с мониторами, размер экрана которых равен 22 \n";
 		 cout << " 4 - Показать данные \n";
 		 cout << " 5 - Сохранить данные в файл \n";
@@ -212,7 +219,9 @@ public:
 		 switch (menu)
 		 {
 		 case 1:
+			 system("cls");
 			 char name_cpu[N];
+			 cin.ignore();
 			 cout << " Введите искомый тип процессора : ";
 			 gets_s(name_cpu, N);
 			 for (int i = 0; i < kol; i++)
@@ -224,11 +233,24 @@ public:
 			 system("pause");
 			 break;
 		 case 2:
+			 system("cls");
+			 int size1;
+			 int size2;
+			 cout << " Введите объём оперативной памяти и размер жёсткого диска через пробел : ";
+			 cin >> size1 >> size2;
+			 for (int i = 0; i < kol; i++)
+			 {
+				 if ((komp[i].size_ozu() == size1&&komp[i].size_hard() == size2) || (komp[i].size_ozu() == size1&&komp[i].size_hard() > size2))
+					 komp[i].show();
+			 }
+			 system("pause");
 			 break;
 		 case 3:
 			 cout << " Компьютеров с монитором , размер которых равен 22 = " << PC::mon_kol << endl;
+			 system("pause");
 			 break;
 		 case 4:
+			 system("cls");
 			 for (int i = 0; i < kol; i++)
 			 {
 				 komp[i].show();
@@ -241,7 +263,6 @@ public:
 			 break;
 		 case 7:
 			 cout << " До свидания \n";
-			 system("pause");
 			 break;
 		 }
 	 } while (menu != 7);
