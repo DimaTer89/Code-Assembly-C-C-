@@ -134,15 +134,16 @@ public:
 		garantia = NULL;
 	}
 	void show();
+	void save();
 };
  void PC::show()
  {
 	 cout << "====================================\n";
 	 cout << " Тип процессора : " << proc << endl;
-	 cout << " Оперативная память (тип, объём) : " << ozu << ", " << volume_ozu << endl;
-	 cout << " Жёсткий диск(тип, объём) : " << hard << ", " << volume_hard << endl;
+	 cout << " Оперативная память (тип, объём) : " << ozu << ", " << volume_ozu << " мегабйт "<< endl;
+	 cout << " Жёсткий диск(тип, объём) : " << hard << ", " << volume_hard << " гигабайт "<< endl;
 	 cout << " Видеокарта : " << videokard << endl;
-	 cout << " Монитор(тип, размер экрана) : " << monitor << ", " << size_monitor << endl;
+	 cout << " Монитор(тип, размер экрана) : " << monitor << ", " << size_monitor << " дюймов "<< endl;
 	 cout << " Производитель : " << proiz << endl;
 	 cout << " Месяц и год выпуска : " << month_year << endl;
 	 cout << " Гарантийный срок : " << garantia << endl;
@@ -166,7 +167,7 @@ public:
 	 char garant[N];
 	 int kol;
 	 int menu;
-	 cout << " Введите количество данных о компьютерах : ";
+	 cout << " Введите количество компьютеров : ";
 	 cin >> kol;
 	 cin.ignore();
 	 PC* komp = new PC[kol];
