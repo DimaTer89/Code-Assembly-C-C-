@@ -1,4 +1,4 @@
-/*Создать класс для работы с матрицами. Предусмот¬реть следующие функции 
+/*Создать класс для работы с матрицами. Предусмот¬реть следующие функции
 для работы с матрицами:
 - сложения матриц;
 - умножения матриц;
@@ -18,7 +18,7 @@ class Matrix
 public:
 	X** arr;
 	int size;
-	Matrix(int size=1)
+	Matrix(int size = 1)
 	{
 		arr = new X*[size];
 		for (int i = 0; i < size; i++)
@@ -50,6 +50,9 @@ public:
 	{
 		return *arr[i];
 	}
+	Matrix operator+(Matrix ob);
+	Matrix operator-(Matrix ob);
+	Matrix& operator=(Matrix ob);
 };
 template<class X> void Matrix<X>::init(int _size)
 {
@@ -79,7 +82,40 @@ template <class X> void Matrix<X>::show()
 		cout << endl;
 	}
 }
-
+template <class X>Matrix<X>::operator+(Matrix ob)
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			arr[i][j] += ob.arr[i][j];
+		}
+	}
+	return *this;
+}
+template <class X>Matrix <X>::operator-(Matrix ob)
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			arr[i][j] -= ob.arr[i][j];
+		}
+	}
+	return *this;
+}
+template <class X> Matrix <X>::operator=(Matrix ob)
+{
+	Matrix temp;
+	for (int i = 0; i < ob.size; i++)
+	{
+		for (int j = 0; j < ob.size; j++)
+		{
+			temp.arr[i][j] = ob.arr[i][j];
+		}
+	}
+	return temp;
+}
 int main()
 {
 	SetConsoleCP(1251);
@@ -89,7 +125,13 @@ int main()
 	cout << " Введите размер матрицы : ";
 	cin >> size;
 	Matrix<int> _matrix;
+	Matrix<int> _matrix2;
+	Matrix<int> _matrix3;
 	_matrix.init(size);
 	_matrix.show();
+	_matrix2.init(size);
+	_matrix2.show();
+	_matrix3 = _matrix + _matrix2;
+	_matrix3.show();
 	system("pause");
 }
