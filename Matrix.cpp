@@ -64,14 +64,8 @@ public:
 	void show();
 	X maxElem();
 	X minElem();
-	X& operator[](int i)
-	{ 
-		return *arr[i];
-	};
-	submasint& operator[](int i)
-	{
-		return arrint[i];
-	}
+	X getElem(int row, int col);
+	void putElem(int row, int col,int num);
 
 	Matrix operator+(const Matrix& ob)
 	{
@@ -191,7 +185,31 @@ template<class X> X Matrix<X>::minElem()
 	}
 	return minElem;
 }
-
+template <class X> X Matrix<X>::getElem(int row, int col)
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			if (i == (row - 1) && j == (col - 1))
+			{
+				return arr[i][j];
+			}
+		}
+	}
+}template <class X> void Matrix<X>::putElem(int row, int col,int num)
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			if (i == (row - 1) && j == (col - 1))
+			{
+				arr[i][j]=num;
+			}
+		}
+	}
+}
 int main()
 {
 	SetConsoleCP(1251);
@@ -206,6 +224,7 @@ int main()
 	int choice;
 	int row=0;
 	int col = 0;
+	int num = 0;
 	bool flag = false;
 
 	cout << " Введите размер матрицы : ";
@@ -381,12 +400,28 @@ int main()
 				system("pause");
 				break;
 			}
-		case 11:
+		case 10:
+			system("cls");
 			cout << " Введите строку : ";
 			cin >> row;
 			cout << " Введите столбец : ";
 			cin >> col;
-			cout <<  " Полученный элемент : "<<_matrix[row - 1]<<endl;
+			cout << " Введите число : ";
+			cin >> num;
+			_matrix.show();
+			cout << "===================================\n";
+			_matrix.putElem(row,col,num);
+			_matrix.show();
+			system("pause");
+			break;
+		case 11:
+			system("cls");
+			cout << " Введите строку : ";
+			cin >> row;
+			cout << " Введите столбец : ";
+			cin >> col;
+			_matrix.show();
+			cout << " Полученный элемент = " << _matrix.getElem(row,col) << endl;
 			system("pause");
 			break;
 		case 12:
@@ -447,6 +482,8 @@ int main()
 		}
 	} while (menu != 0);
 }
+
+
 =========================================================
 	#include "stdafx.h"
 #include <iostream>
