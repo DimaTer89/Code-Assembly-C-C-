@@ -209,17 +209,22 @@ template<class X> X Matrix<X>::minElem()
 }
 template <class X> X Matrix<X>::getElem(int row, int col)
 {
+	X tmp = 0;
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
 		{
 			if (i == (row - 1) && j == (col - 1))
 			{
-				return arr[i][j];
+				tmp=arr[i][j];
+				break;
 			}
 		}
 	}
-}template <class X> void Matrix<X>::putElem(int row, int col, X num)
+	return tmp;
+}
+
+template <class X> void Matrix<X>::putElem(int row, int col, X num)
 {
 	for (int i = 0; i < size; i++)
 	{
@@ -451,32 +456,11 @@ int main()
 				{
 					system("cls");
 					cout << " Матрицы № 1 \n";
-					for (int i = 0; i < _Cmatrix.size; i++)
-					{
-						for (int j = 0; j < _Cmatrix.size; j++)
-						{
-							cout << " " << _Cmatrix.arr[i][j] << " ";
-						}
-						cout << endl;
-					}
+					_Cmatrix.show();
 					cout << " Матрица № 2 \n";
-					for (int i = 0; i < _Cmatrix2.size; i++)
-					{
-						for (int j = 0; j < _Cmatrix2.size; j++)
-						{
-							cout << " " << _Cmatrix2.arr[i][j] << " ";
-						}
-						cout << endl;
-					}
+					_Cmatrix2.show();
 					cout << " Матрица № 3 \n";
-					for (int i = 0; i < _Cmatrix3.size; i++)
-					{
-						for (int j = 0; j < _Cmatrix3.size; j++)
-						{
-							cout << " " << _Cmatrix3.arr[i][j] << " ";
-						}
-						cout << endl;
-					}
+					_Cmatrix3.show();
 					system("pause");
 					break;
 				}
@@ -526,32 +510,11 @@ int main()
 					cout << " Сумма матриц \n";
 					_Cmatrix3 = _Cmatrix + _Cmatrix2;
 					cout << " Матрицы № 1 \n";
-					for (int i = 0; i < _Cmatrix.size; i++)
-					{
-						for (int j = 0; j < _Cmatrix.size; j++)
-						{
-							cout << " " << _Cmatrix.arr[i][j] << " ";
-						}
-						cout << endl;
-					}
+					_Cmatrix.show();
 					cout << " Матрица № 2 \n";
-					for (int i = 0; i < _Cmatrix2.size; i++)
-					{
-						for (int j = 0; j < _Cmatrix2.size; j++)
-						{
-							cout << " " << _Cmatrix2.arr[i][j] << " ";
-						}
-						cout << endl;
-					}
+					_Cmatrix2.show();
 					cout << " Матрица № 3 \n";
-					for (int i = 0; i < _Cmatrix3.size; i++)
-					{
-						for (int j = 0; j < _Cmatrix3.size; j++)
-						{
-							cout << " " << _Cmatrix3.arr[i][j] << " ";
-						}
-						cout << endl;
-					}
+					_Cmatrix3.show();
 					system("pause");
 					break;
 				}
@@ -655,32 +618,11 @@ int main()
 						cout << "Вычитание матриц \n";
 						_Cmatrix3 = _Cmatrix - _Cmatrix2;
 						cout << " Матрицы № 1 \n";
-						for (int i = 0; i < _Cmatrix.size; i++)
-						{
-							for (int j = 0; j < _Cmatrix.size; j++)
-							{
-								cout << " " << _Cmatrix.arr[i][j] << " ";
-							}
-							cout << endl;
-						}
+						_Cmatrix.show();
 						cout << " Матрица № 2 \n";
-						for (int i = 0; i < _Cmatrix2.size; i++)
-						{
-							for (int j = 0; j < _Cmatrix2.size; j++)
-							{
-								cout << " " << _Cmatrix2.arr[i][j] << " ";
-							}
-							cout << endl;
-						}
+						_Cmatrix2.show();
 						cout << " Матрица № 3 \n";
-						for (int i = 0; i < _Cmatrix3.size; i++)
-						{
-							for (int j = 0; j < _Cmatrix3.size; j++)
-							{
-								cout << " " << _Cmatrix3.arr[i][j] << " ";
-							}
-							cout << endl;
-						}
+						_Cmatrix3.show();
 						system("pause");
 						break;
 					}
@@ -689,32 +631,11 @@ int main()
 						cout << "Вычитание матриц \n";
 						_Cmatrix3 = _Cmatrix2 - _Cmatrix;
 						cout << " Матрицы № 1 \n";
-						for (int i = 0; i < _Cmatrix.size; i++)
-						{
-							for (int j = 0; j < _Cmatrix.size; j++)
-							{
-								cout << " " << _Cmatrix.arr[i][j] << " ";
-							}
-							cout << endl;
-						}
+						_Cmatrix.show();
 						cout << " Матрица № 2 \n";
-						for (int i = 0; i < _Cmatrix2.size; i++)
-						{
-							for (int j = 0; j < _Cmatrix2.size; j++)
-							{
-								cout << " " << _Cmatrix2.arr[i][j] << " ";
-							}
-							cout << endl;
-						}
+						_Cmatrix2.show();
 						cout << " Матрица № 3 \n";
-						for (int i = 0; i < _Cmatrix3.size; i++)
-						{
-							for (int j = 0; j < _Cmatrix3.size; j++)
-							{
-								cout << " " << _Cmatrix3.arr[i][j] << " ";
-							}
-							cout << endl;
-						}
+						_Cmatrix3.show();
 						system("pause");
 						break;
 					}
@@ -1177,11 +1098,10 @@ int main()
 				if (key == 1)
 				{
 					system("cls");
-					cout << " Установить  элемент какой матрицы найти : 1 2 3 \n";
+					cout << " Установить  элемент какой матрицы : 1 2 3 \n";
 					cout << " Выш выбор : ";
 					do
 					{
-						cout << " Ваш выбор : ";
 						cin >> choice;
 						if (choice < 1 || choice>3)cout << " Ошибка, введите число от 1 до 3 включительно \n";
 					} while (choice < 1 || choice>3);
@@ -1199,7 +1119,7 @@ int main()
 							cin >> col;
 							if (col >_matrix.size)cout << " Некорректный размер, введите снова : ";
 						} while (col >_matrix.size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> num;
 						cout << " Матрица до изменения \n";
 						_matrix.show();
@@ -1223,7 +1143,7 @@ int main()
 							cin >> col;
 							if (col >size)cout << " Некорректный размер, введите снова : ";
 						} while (col > size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> num;
 						cout << " Матрица до изменения \n";
 						_matrix2.show();
@@ -1247,7 +1167,7 @@ int main()
 							cin >> col;
 							if (col >_matrix3.size)cout << " Некорректный размер, введите снова : ";
 						} while (col > _matrix3.size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> num;
 						cout << " Матрица до изменения \n";
 						_matrix3.show();
@@ -1261,7 +1181,7 @@ int main()
 				if (key == 2)
 				{
 					system("cls");
-					cout << " Установить  элемент какой матрицы найти : 1 2 3 \n";
+					cout << " Установить  элемент какой матрицы : 1 2 3 \n";
 					cout << " Выш выбор : ";
 					do
 					{
@@ -1282,7 +1202,7 @@ int main()
 							cin >> col;
 							if (col >_Dmatrix.size)cout << " Некорректный размер, введите снова : ";
 						} while (col >_Dmatrix.size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> dnum;
 						cout << " Матрица до изменения \n";
 						_Dmatrix.show();
@@ -1306,7 +1226,7 @@ int main()
 							cin >> col;
 							if (col >_Dmatrix2.size)cout << " Некорректный размер, введите снова : ";
 						} while (col > _Dmatrix2.size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> dnum;
 						cout << " Матрица до изменения \n";
 						_Dmatrix2.show();
@@ -1330,7 +1250,7 @@ int main()
 							cin >> col;
 							if (col >_Dmatrix3.size)cout << " Некорректный размер, введите снова : ";
 						} while (col > _Dmatrix3.size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> dnum;
 						cout << " Матрица до изменения \n";
 						_Dmatrix3.show();
@@ -1344,8 +1264,7 @@ int main()
 				if (key == 3)
 				{
 					system("cls");
-					cout << " Установить  элемент какой матрицы найти : 1 2 3 \n";
-					cout << " Выш выбор : ";
+					cout << " Установить  элемент какой матрицы : 1 2 3 \n";
 					do
 					{
 						cout << " Ваш выбор : ";
@@ -1366,7 +1285,7 @@ int main()
 							cin >> col;
 							if (col >_Cmatrix.size)cout << " Некорректный размер, введите снова : ";
 						} while (col >_Cmatrix.size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> cnum;
 						cout << " Матрица до изменения \n";
 						_Cmatrix.show();
@@ -1390,7 +1309,7 @@ int main()
 							cin >> col;
 							if (col >_Cmatrix2.size)cout << " Некорректный размер, введите снова : ";
 						} while (col > _Cmatrix2.size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> cnum;
 						cout << " Матрица до изменения \n";
 						_Cmatrix2.show();
@@ -1414,7 +1333,7 @@ int main()
 							cin >> col;
 							if (col >_Cmatrix3.size)cout << " Некорректный размер, введите снова : ";
 						} while (col > _Cmatrix3.size);
-						cout << " Введите число : ";
+						cout << " Введите элемент : ";
 						cin >> cnum;
 						cout << " Матрица до изменения \n";
 						_Cmatrix3.show();
@@ -1439,7 +1358,7 @@ int main()
 				if (key == 1)
 				{
 					system("cls");
-					cout << " Получить элемент какой матрицы найти : 1 2 3 \n";
+					cout << " Получить элемент какой матрицы : 1 2 3 \n";
 					cout << " Выш выбор : ";
 					do
 					{
@@ -1507,7 +1426,7 @@ int main()
 				if (key == 2)
 				{
 					system("cls");
-					cout << " Получить элемент какой матрицы найти : 1 2 3 \n";
+					cout << " Получить элемент какой матрицы : 1 2 3 \n";
 					cout << " Выш выбор : ";
 					do
 					{
@@ -1575,7 +1494,7 @@ int main()
 				if (key == 3)
 				{
 					system("cls");
-					cout << " Получить элемент какой матрицы найти : 1 2 3 \n";
+					cout << " Получить элемент какой матрицы : 1 2 3 \n";
 					cout << " Выш выбор : ";
 					do
 					{
@@ -1755,8 +1674,8 @@ int main()
 					cout << " Выш выбор : ";
 					do
 					{
-                       cin >> choice;
-					   if (choice < 1 || choice>3)cout << " Ошибка, неверный ввод, введите число от 1 до 3 : ";
+						cin >> choice;
+						if (choice < 1 || choice>3)cout << " Ошибка, неверный ввод, введите число от 1 до 3 : ";
 					} while (choice < 1 || choice>3);
 					if (choice == 1)
 					{
@@ -1845,5 +1764,5 @@ int main()
 		default:
 			cout << " Ошибка. Данного пункта нет в меню \n";
 		}
-	 } while (menu != 0);
+	} while (menu != 0);
 }
