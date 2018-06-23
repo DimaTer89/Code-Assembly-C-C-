@@ -8,7 +8,7 @@ template<class X>
 class Matrix
 {
 public:
-	X * * arr;
+	X** arr;
 	int size;
 	Matrix()
 	{
@@ -51,12 +51,12 @@ public:
 		delete[]arr;
 		arr = NULL;
 	}
-	void init_hand(int _size);
-	void init(int _size);
-	void show();
 	X maxElem();
 	X minElem();
 	X getElem(int row, int col);
+	void init_hand(int _size);
+	void init(int _size);
+	void show();
 	void putElem(int row, int col, X num);
 	Matrix transPon(Matrix& ob)
 	{
@@ -244,7 +244,7 @@ int main()
 	SetConsoleOutputCP(1251);
 	srand((unsigned int)time(0));
 	cout << " Здравствуйте, Вас приветсвует програма для работы с матрицами.\n Матрицы в данной программе представлены в классическом варианте, \n";
-	cout << " где число строк и число столбцов совпадает. Создаётся три матрицы( две заполняются, \n третья иницилизиуется по умолчанию конструктором )";
+	cout << " где число строк и число столбцов совпадает. Создаётся три матрицы( две заполняются, \n третья иницилизиуется по умолчанию конструктором \n(третья матрица показывает результат арифметических действий))";
 	cout << " \n Выбор типа данных остаётся за вами. \n Для всех матриц задаётся один размер в начале программы.\n Приятной работы.\n";
 	system("pause");
 	system("cls");
@@ -656,6 +656,7 @@ int main()
 					system("cls");
 					cout << " 1 - умножить 1 матрицу на 2 \n";
 					cout << " 2 - умножить 2 матрицу на 1 \n";
+					cout << " Ваш выбор : ";
 					do
 					{
 						cin >> choice;
@@ -693,6 +694,7 @@ int main()
 					system("cls");
 					cout << " 1 - умножить 1 матрицу на 2 \n";
 					cout << " 2 - умножить 2 матрицу на 1 \n";
+					cout << " Ваш выбор : ";
 					do
 					{
 						cin >> choice;
@@ -730,6 +732,7 @@ int main()
 					system("cls");
 					cout << " 1 - умножить 1 матрицу на 2 \n";
 					cout << " 2 - умножить 2 матрицу на 1 \n";
+					cout << " Ваш выбор : ";
 					do
 					{
 						cin >> choice;
@@ -775,7 +778,7 @@ int main()
 				if (key == 1)
 				{
 					system("cls");
-					cout << " Какую матрицу траспонировать : 1 2 3 : ";
+					cout << " Какую матрицу траспонировать : 1 2 3 : \n";
 					do
 					{
 						cout << " Ваш выбор : ";
@@ -816,7 +819,7 @@ int main()
 				if (key == 2)
 				{
 					system("cls");
-					cout << " Какую матрицу траспонировать : 1 2 3 : ";
+					cout << " Какую матрицу траспонировать : 1 2 3 : \n";
 					do
 					{
 						cout << " Ваш выбор : ";
@@ -857,7 +860,7 @@ int main()
 				if (key == 1)
 				{
 					system("cls");
-					cout << " Какую матрицу траспонировать : 1 2 3 : ";
+					cout << " Какую матрицу траспонировать : 1 2 3 : \n";
 					do
 					{
 						cout << " Ваш выбор : ";
