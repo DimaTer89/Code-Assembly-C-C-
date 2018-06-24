@@ -21,32 +21,34 @@ struct Node
 
 class Stek
 {
-	Node* Head;
-	Node* Head2;
-	char* string;
+	
 public:
+	Node* st;
+	Node* st_os;
+	Node* st_zs;
 	Stek()
 	{
-		Head = NULL;
-		string = new char('\0');
+		st = NULL;
+		st_os = NULL;
+		st_zs = NULL;
+		
 	}
 	Stek(const Stek& ob)
 	{
-		string = new char[strlen(ob.string) + 1];
-		strcpy(string, ob.string);
+		
 	}
 	~Stek()
 	{
-		delete[]string;
-		clearStek(Head);
-		clearStek(Head2);
+		
+		clearStek(st);
+		clearStek(st_os);
+		clearStek(st_zs);
 	}
 	void showStek(Node* head);
 	void addStek(char s,Node*& head);
 	char getElemOfStek(Node*& head);
 	void clearStek(Node*& head);
 	void analys();
-	void getString(char* str);
 	void revers(Node*& head)
 	{
 		Node* tmp = NULL;
@@ -58,11 +60,6 @@ public:
 		head = tmp;
 	}
 };
-void Stek::getString(char* str)
-{
-	string = new char[strlen(str) + 1];
-	strcpy(string, str);
-}
 void Stek::showStek(Node* head)
 {
 	Node* tmp = head;
@@ -102,56 +99,90 @@ char Stek::getElemOfStek(Node*& head)
 }
 void Stek::analys()
 {
-	int len = strlen(string);
-	cout << len << endl;
-	for(int i=0;i<len;i++)
-	{
-		if (string[i] == '(' || string[i] == '{' || string[i] == '[')
-		{
-			addStek(string[i], Head);
-		}
-		else
-		{
-			addStek(string[i],Head2);
-		}
-		
-	}
-    cout << " Содержимое 1 стека \n";
-	showStek(Head);
-	revers(Head);
-	cout << " Содержимое 1 стека после реверса\n";
-	showStek(Head);
-	cout << " Содержимое 2 стека \n";
-	showStek(Head2);
-	revers(Head2);
-	cout << " Содержимое 2 стека после реверса \n";
-	showStek(Head2);
-	Node*tmp = Head;
+	char c;
+	Node* tmp = st;
 	while (tmp)
 	{
-		while (Head2)
+		c = tmp->elem;
+		if (c == '(' || c == '{' || c == '[')
 		{
-			if ((tmp->elem == '('&&Head2->elem == ')') ||( tmp->elem == '['&&Head2->elem == ']') ||( tmp->elem == '{'&&Head2->elem == '}'))
-			{
-				getElemOfStek(Head);
-				break;
-			}
-			Head2 = Head2->next;
+			cout << c;
+			addStek(c, st_os);
 		}
-		tmp = tmp->next;
+		else if (c == ')' || c == '}' || c == ']')
+		{
+			if (c == ')')
+			{
+				if (st_os->elem != '(')
+				{
+					Node* temp = st_os;
+					while (temp->elem != '(' || tmp != 0)
+					{
+						temp = temp->next;
+					}
+
+				}
+				if (st_os != 0)
+				{
+					addStek(' ', st_os);
+				}
+				else break;
+			}
+			if (c == '}') {
+				{
+					Node* temp = st_os;
+					while (temp->elem != '(' || tmp != 0)
+					{
+						temp = temp->next;
+					}
+
+				}
+				if (st_os != 0) {
+					addStek(' ', st_os);
+				}
+				else break;
+			}
+			if (c == ']') {
+				{
+					Node* temp = st_os;
+					while (temp->elem != '(' || tmp != 0)
+					{
+						temp = temp->next;
+					}
+
+				}
+				if (st_os != 0) {
+					addStek(' ', st_os);
+				}
+				else break;
+			}
+			else if (c == ';')break;
+
+			tmp = tmp->next;
+		}
 	}
-	showStek(Head);
+	/*cout << endl;
+	cout << " Стек октрывающих скобок \n";
+	showStek(st_os);
+	cout << " Стек закрывающих скобок \n";
+	showStek(st_zs);*/
+	
 }
 int main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	char string[50];
-	cout << " Введите строку : ";
-	gets_s(string, 50);
-	cout << string << endl;
+	char s=NULL;
 	Stek ob;
-	ob.getString(string);
+	cout << " Введите строку : ";
+	while (s != '\n')
+	{
+		s = getchar();
+		ob.addStek(s, ob.st);
+		cout << s << " ";
+	}
+	cout << endl;
+	ob.showStek(ob.st);
 	ob.analys();
 	system("pause");
 }
