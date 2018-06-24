@@ -1,9 +1,9 @@
 /*Есть строка символов, признаком конца которой является ;. В строке могут быть фигурные, круглые, квадратные скобки. Скобки могут быть открывающими и закрывающими. Строку поместить в стек. Ввод строки предусмотреть с клавиатуры.
 Необходимо проверить корректность расстановки скобок.
 При этом необходимо, чтобы выполнились следующие правила:
-1.Каждая открывающая скобка должна иметь справа такую же закрывающую. 
+1.Каждая открывающая скобка должна иметь справа такую же закрывающую.
 Обратное также должно быть верно.
-2.Открывающие и закрывающие пары скобок разных типов должны быть 
+2.Открывающие и закрывающие пары скобок разных типов должны быть
 правильно расположены по отношению друг к другу.
 3.Пример правильной строки: ({x-y-z}*[x+2y]-(z+4x));
 4.Пример неправильной строки: ([x-y-z}*[x+2y)-{z+4x)].
@@ -21,168 +21,163 @@ struct Node
 
 class Stek
 {
-	
-public:
+	char* str;
 	Node* st;
-	Node* st_os;
-	Node* st_zs;
+public:
 	Stek()
 	{
 		st = NULL;
-		st_os = NULL;
-		st_zs = NULL;
-		
+		str = new char('\0');
+
 	}
 	Stek(const Stek& ob)
 	{
-		
+		str = new char[strlen(ob.str) + 1];
+		strcpy(str, ob.str);
 	}
 	~Stek()
 	{
-		
-		clearStek(st);
-		clearStek(st_os);
-		clearStek(st_zs);
+		delete[]str;
+		clearStek();
 	}
-	void showStek(Node* head);
-	void addStek(char s,Node*& head);
-	char getElemOfStek(Node*& head);
-	void clearStek(Node*& head);
+	void addStek(char s);
+	char getElemOfStek();
+	void clearStek();
 	void analys();
-	void revers(Node*& head)
-	{
-		Node* tmp = NULL;
-		while (head)
-		{
-			addStek(head->elem, tmp);
-			head = head->next;
-		}
-		head = tmp;
-	}
+	void getStr(char* s);
 };
-void Stek::showStek(Node* head)
-{
-	Node* tmp = head;
-	while (tmp)
-	{
-		cout << tmp->elem << " ";
-		tmp = tmp->next;
-	}
-	cout << endl;
-}
-void Stek::addStek(char s,Node*& head)
+void Stek::addStek(char s)
 {
 	Node*tmp = new Node;
 	tmp->elem = s;
-	tmp->next = head;
-	head = tmp;
+	tmp->next = st;
+	st = tmp;
 }
-void Stek::clearStek(Node*& head)
+void Stek::clearStek()
 {
-	Node* tmp=NULL;
+	Node* tmp = NULL;
 	while (tmp)
 	{
-		tmp = head->next;
-		delete head;
-		head = tmp;
+		tmp = st->next;
+		delete st;
+		st = tmp;
 	}
-	head = NULL;
+	st= NULL;
 }
-char Stek::getElemOfStek(Node*& head)
+char Stek::getElemOfStek()
 {
-	if (!head)return 0;
-	char data = head->elem;
-	Node* tmp = head;
-	head = head->next;
+	if (!st)return 'f';
+	char data = st->elem;
+	Node* tmp = st;
+	st = st->next;
 	delete tmp;
 	return data;
 }
+void Stek::getStr(char* s)
+{
+	str = new char[strlen(s) + 1];
+	strcpy(str, s);
+}
 void Stek::analys()
 {
-	char c;
-	Node* tmp = st;
-	while (tmp)
+	int len = strlen(str);
+	char elem = NULL;
+	int i = 0;
+	bool flag = false;
+	while(i<len&&str[i]!=';')
 	{
-		c = tmp->elem;
-		if (c == '(' || c == '{' || c == '[')
+		if (str[i] == '(' || str[i] == '{' || str[i] == '[')
 		{
-			cout << c;
-			addStek(c, st_os);
+			flag = true;
+			addStek(str[i]);
 		}
-		else if (c == ')' || c == '}' || c == ']')
+		if (str[i] == ')')
 		{
-			if (c == ')')
+			if (st == NULL&&flag==false)
 			{
-				if (st_os->elem != '(')
-				{
-					Node* temp = st_os;
-					while (temp->elem != '(' || tmp != 0)
-					{
-						temp = temp->next;
-					}
-
-				}
-				if (st_os != 0)
-				{
-					addStek(' ', st_os);
-				}
-				else break;
+				elem = str[i];
+				break;
 			}
-			if (c == '}') {
+			else
+			{
+				if (str[i] == ')'&&st->elem == '(')
 				{
-					Node* temp = st_os;
-					while (temp->elem != '(' || tmp != 0)
-					{
-						temp = temp->next;
-					}
-
+					getElemOfStek();
 				}
-				if (st_os != 0) {
-					addStek(' ', st_os);
-				}
-				else break;
-			}
-			if (c == ']') {
+				else
 				{
-					Node* temp = st_os;
-					while (temp->elem != '(' || tmp != 0)
-					{
-						temp = temp->next;
-					}
-
+					elem = str[i];
+					break;
 				}
-				if (st_os != 0) {
-					addStek(' ', st_os);
-				}
-				else break;
 			}
-			else if (c == ';')break;
-
-			tmp = tmp->next;
+			
 		}
+		if (str[i] == ']')
+		{
+			if (st == NULL && flag == false)
+			{
+				elem = str[i];
+				break;
+			}
+			else
+			{
+				if (str[i] == ']'&&st->elem == '[')
+				{
+					getElemOfStek();
+				}
+				else
+				{
+					elem = str[i];
+					break;
+				}
+			}
+		}
+		if (str[i] == '}')
+		{
+			if (st == NULL && flag == false)
+			{
+				elem = str[i];
+				break;
+			}
+			else
+			{
+				if (str[i] == '}'&&st->elem == '{')
+				{
+					getElemOfStek();
+				}
+				else
+				{
+					elem = str[i];
+					break;
+				}
+			}
+		}
+		i++;
 	}
-	/*cout << endl;
-	cout << " Стек октрывающих скобок \n";
-	showStek(st_os);
-	cout << " Стек закрывающих скобок \n";
-	showStek(st_zs);*/
-	
+	if (!st&&flag==true)
+		cout << " Скобки расставлены верно \n";
+	else
+	{
+		cout << " Скобки расставлены неверно : ";
+		int i = 0;
+		while (str[i] < elem&&str[i]!=';')
+		{
+			cout << str[i];
+			i++;
+		}
+		cout << endl;
+	}
 }
 int main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	char s=NULL;
+	char s = NULL;
+	char str[256];
 	Stek ob;
 	cout << " Введите строку : ";
-	while (s != '\n')
-	{
-		s = getchar();
-		ob.addStek(s, ob.st);
-		cout << s << " ";
-	}
-	cout << endl;
-	ob.showStek(ob.st);
+	gets_s(str, 256);
+	ob.getStr(str);
 	ob.analys();
 	system("pause");
 }
