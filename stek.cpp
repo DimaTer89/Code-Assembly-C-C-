@@ -81,8 +81,8 @@ void Stek::getStr(char* s)
 void Stek::analys()
 {
 	int len = strlen(str);
-	char elem = NULL;
 	int i = 0;
+	int l = 0;
 	bool flag = false;
 	while(i<len&&str[i]!=';')
 	{
@@ -95,7 +95,7 @@ void Stek::analys()
 		{
 			if (st == NULL&&flag==false)
 			{
-				elem = str[i];
+				l = i;
 				break;
 			}
 			else
@@ -106,7 +106,7 @@ void Stek::analys()
 				}
 				else
 				{
-					elem = str[i];
+					l = i;
 					break;
 				}
 			}
@@ -116,7 +116,7 @@ void Stek::analys()
 		{
 			if (st == NULL && flag == false)
 			{
-				elem = str[i];
+				l = i;
 				break;
 			}
 			else
@@ -127,7 +127,7 @@ void Stek::analys()
 				}
 				else
 				{
-					elem = str[i];
+					l = i;
 					break;
 				}
 			}
@@ -136,7 +136,7 @@ void Stek::analys()
 		{
 			if (st == NULL && flag == false)
 			{
-				elem = str[i];
+				l = i;
 				break;
 			}
 			else
@@ -147,10 +147,14 @@ void Stek::analys()
 				}
 				else
 				{
-					elem = str[i];
+					l = i;
 					break;
 				}
 			}
+		}
+		if (str[i] != ')' || str[i] != '(' || str[i] != '[' || str[i] != ']' || str[i] != '{' || str[i] != '}')
+		{
+			l = i;
 		}
 		i++;
 	}
@@ -160,7 +164,7 @@ void Stek::analys()
 	{
 		cout << " Скобки расставлены неверно : ";
 		int i = 0;
-		while (str[i] < elem&&str[i]!=';')
+		while (i <= l&&str[i]!=';')
 		{
 			cout << str[i];
 			i++;
