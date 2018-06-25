@@ -100,6 +100,7 @@ void Stek::analys()
 	reserv(str);
 	int count = 0;
 	bool flag = false;
+	bool flag1 = false;
 	Node* tmp = str;
 	while (tmp)
 	{
@@ -111,62 +112,58 @@ void Stek::analys()
 		if (tmp->elem == ')')
 		{
 			if (st == NULL && flag == false)
+				break;
+			if (st == NULL && flag == true)
 			{
+				flag1 = true;
 				break;
 			}
 			else
 			{
 				if (st->elem == '(')
-				{
 					getElemOfStek(st);
-				}
 				else
-				{
 					break;
-				}
 			}
-
 		}
 		if (tmp->elem == ']')
 		{
 			if (st == NULL && flag == false)
+				break;
+			if (st == NULL && flag == true)
 			{
+				flag1 = true;
 				break;
 			}
 			else
 			{
 				if (st->elem == '[')
-				{
 					getElemOfStek(st);
-				}
 				else
-				{
 					break;
-				}
 			}
 		}
 		if (tmp->elem == '}')
 		{
 			if (st == NULL && flag == false)
+				break;
+			if (st == NULL && flag == true)
 			{
+				flag1 = true;
 				break;
 			}
 			else
 			{
 				if (st->elem == '{')
-				{
 					getElemOfStek(st);
-				}
 				else
-				{
 					break;
-				}
 			}
 		}
 		tmp = tmp->next;
 		count++;
 	}
-	if (!st&&flag == true)
+	if (!st&&flag == true&&flag1==false)
 		cout << " Скобки расставлены верно \n";
 	else
 	{
