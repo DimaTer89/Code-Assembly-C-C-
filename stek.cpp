@@ -186,18 +186,7 @@ int main()
 	system("pause");
 }
 ================================================
-	/*Есть строка символов, признаком конца которой является ;. В строке могут быть фигурные, круглые, квадратные скобки. Скобки могут быть открывающими и закрывающими.
-Строку поместить в стек. Ввод строки предусмотреть с клавиатуры.
-Необходимо проверить корректность расстановки скобок.
-При этом необходимо, чтобы выполнились следующие правила:
-1.Каждая открывающая скобка должна иметь справа такую же закрывающую.
-Обратное также должно быть верно.
-2.Открывающие и закрывающие пары скобок разных типов должны быть
-правильно расположены по отношению друг к другу.
-3.Пример правильной строки: ({x-y-z}*[x+2y]-(z+4x));
-4.Пример неправильной строки: ([x-y-z}*[x+2y)-{z+4x)].
-Если все правила соблюдены выведите информационное сообщение о корректности строки, иначе покажите строку до места возникновения первой ошибки.*/
-#include <iostream>
+	#include <iostream>
 #include <Windows.h>
 
 using namespace std;
@@ -210,26 +199,28 @@ struct Node
 
 class Stek
 {
-	
+
 public:
 	Node* str;
 	Node* st;
+	Node* vyvodStr;
 	Stek()
 	{
 		st = NULL;
 		str = NULL;
-
+		vyvodStr = NULL;
 	}
 	Stek(const Stek& ob)
 	{
-		
+
 	}
 	~Stek()
 	{
 		clearStek(st);
 		clearStek(str);
+		clearStek(vyvodStr);
 	}
-	void addStek(char s,Node*& head);
+	void addStek(char s, Node*& head);
 	char getElemOfStek(Node*& head);
 	void clearStek(Node*& head);
 	void analys();
@@ -251,11 +242,11 @@ void Stek::reserv(Node*& head)
 	while (head)
 	{
 		addStek(head->elem, tmp);
-		head=head->next;
+		head = head->next;
 	}
 	head = tmp;
 }
-void Stek::addStek(char s,Node*& head)
+void Stek::addStek(char s, Node*& head)
 {
 	Node*tmp = new Node;
 	tmp->elem = s;
@@ -285,8 +276,7 @@ char Stek::getElemOfStek(Node*& head)
 void Stek::analys()
 {
 	reserv(str);
-	show(str);
-	int i = 0;
+	reserv(vyvodStr);
 	int l = 0;
 	bool flag = false;
 	while (str&&str->elem != ';')
@@ -294,13 +284,13 @@ void Stek::analys()
 		if (str->elem == '(' || str->elem == '{' || str->elem == '[')
 		{
 			flag = true;
-			addStek(str->elem,st);
+			addStek(str->elem, st);
 		}
 		if (str->elem == ')')
 		{
-			if (st == NULL&&flag == false)
+			if (st == NULL && flag == false)
 			{
-				l = i;
+				
 				break;
 			}
 			else
@@ -311,7 +301,7 @@ void Stek::analys()
 				}
 				else
 				{
-					l = i;
+					
 					break;
 				}
 			}
@@ -321,7 +311,7 @@ void Stek::analys()
 		{
 			if (st == NULL && flag == false)
 			{
-				l = i;
+				
 				break;
 			}
 			else
@@ -332,7 +322,7 @@ void Stek::analys()
 				}
 				else
 				{
-					l = i;
+					
 					break;
 				}
 			}
@@ -341,7 +331,7 @@ void Stek::analys()
 		{
 			if (st == NULL && flag == false)
 			{
-				l = i;
+				
 				break;
 			}
 			else
@@ -352,16 +342,13 @@ void Stek::analys()
 				}
 				else
 				{
-					l = i;
+					
 					break;
 				}
 			}
 		}
-		if (str->elem != ')' || str->elem != '(' || str->elem != '[' || str->elem != ']' || str->elem != '{' || str->elem != '}')
-		{
-			l = i;
-		}
 		str = str->next;
+		l++;
 	}
 	if (!st&&flag == true)
 		cout << " Скобки расставлены верно \n";
@@ -369,10 +356,11 @@ void Stek::analys()
 	{
 		cout << " Скобки расставлены неверно : ";
 		int i = 0;
-		while (str&&str->elem != ';')
+		while (vyvodStr&&i<l)
 		{
-			cout << str->elem;
-			str = str->next;
+			cout << vyvodStr->elem;
+			vyvodStr = vyvodStr->next;
+			i++;
 		}
 		cout << endl;
 	}
@@ -389,7 +377,9 @@ int main()
 		s = getchar();
 		cout << s;
 		ob.addStek(s, ob.str);
+		ob.addStek(s, ob.vyvodStr);
 	}
 	ob.analys();
 	system("pause");
 }
+================
