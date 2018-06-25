@@ -62,7 +62,7 @@ void Stek::clearStek()
 		delete st;
 		st = tmp;
 	}
-	st= NULL;
+	st = NULL;
 }
 char Stek::getElemOfStek()
 {
@@ -84,7 +84,7 @@ void Stek::analys()
 	int i = 0;
 	int l = 0;
 	bool flag = false;
-	while(i<len&&str[i]!=';')
+	while (i<len&&str[i] != ';')
 	{
 		if (str[i] == '(' || str[i] == '{' || str[i] == '[')
 		{
@@ -93,7 +93,7 @@ void Stek::analys()
 		}
 		if (str[i] == ')')
 		{
-			if (st == NULL&&flag==false)
+			if (st == NULL&&flag == false)
 			{
 				l = i;
 				break;
@@ -110,7 +110,7 @@ void Stek::analys()
 					break;
 				}
 			}
-			
+
 		}
 		if (str[i] == ']')
 		{
@@ -158,13 +158,13 @@ void Stek::analys()
 		}
 		i++;
 	}
-	if (!st&&flag==true)
+	if (!st&&flag == true)
 		cout << " Скобки расставлены верно \n";
 	else
 	{
 		cout << " Скобки расставлены неверно : ";
 		int i = 0;
-		while (i <= l&&str[i]!=';')
+		while (i <= l&&str[i] != ';')
 		{
 			cout << str[i];
 			i++;
