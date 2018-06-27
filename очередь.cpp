@@ -9,6 +9,7 @@ using namespace std;
 struct client
 {
 	char position[128];
+	int time;
 	int prior;
 	client* next, *prev;
 };
@@ -27,15 +28,16 @@ public:
 	{
 
 	}
-	void addQueque(char* s,int prior,client*& head,client*& tail);
+	void addQueque(char* s,int prior,int time,client*& head,client*& tail);
 	void showQueque();
-	int insert(char* s, int prior);
+	int insert(char* s, int prior,int time);
 };
-void printer::addQueque(char* s,int prior,client*& head,client*& tail)
+void printer::addQueque(char* s,int prior,int time,client*& head,client*& tail)
 {
 	client* tmp = new client;
 	strcpy(tmp->position, s);
 	tmp->prior = prior;
+	tmp->time = time;
 	tmp->next = NULL;
 	if (head != NULL)
 	{
@@ -50,24 +52,25 @@ void printer::addQueque(char* s,int prior,client*& head,client*& tail)
 		head = tmp;
 	}
 }
-int printer::insert(char* s, int prior)
+int printer::insert(char* s, int prior,int time)
 {
 	client* elem = new client;
 	strcpy(elem->position, s);
 	elem->prior = prior;
+	elem->time = time;
 	if (head == NULL)
 	{
-		addQueque(elem->position, elem->prior, head, tail);
+		addQueque(elem->position, elem->prior,elem->time, head, tail);
 		return 1;
 	}
 	if (head->prior < elem->prior)
 	{
-		addQueque(elem->position, elem->prior, head, tail);
+		addQueque(elem->position, elem->prior,elem->time, head, tail);
 		return 1;
 	}
 	if(tail->prior==elem->prior)
 	{
-		addQueque(elem->position, elem->prior, head, tail);
+		addQueque(elem->position, elem->prior,elem->time, head, tail);
 		return 1;
 	}
 	if (head!=NULL&&head->prior == elem->prior)
@@ -87,13 +90,13 @@ int printer::insert(char* s, int prior)
 		elem->next->prev = elem;
 		return 1;
 	}
-	if (head != NULL&&tail->prior > elem->prior)
+	if (head != NULL&&tail->prior>elem->prior)
 	{
-		client* tmp = tail;
+		client* tmp = head;
 		while (tmp)
 		{
-			if (tmp->prior == elem->prior)
-				tmp = tmp->prev;
+			if (tmp->prior < elem->prior&&tmp->prior>elem->prior)
+				tmp = tmp->next;
 			else
 				break;
 		}
@@ -113,6 +116,7 @@ void printer::showQueque()
 	{
 		cout << " Должность : " << tmp->position << endl;
 		cout << " Приоритет : " << tmp->prior << endl;
+		cout << " Время : " << tmp->time << endl;
 		tmp = tmp->next;
 		cout << endl;
 	}
@@ -126,6 +130,7 @@ int main()
 	int menu = 0;
 	char name[128];
 	int prior;
+	int time;
 	printer ob;
 	do
 	{
@@ -148,7 +153,9 @@ int main()
 				prior = 2;
 			if (strcmp(name, "охранник") == 0)
 				prior = 3;
-			ob.insert(name, prior);
+			cout << " Введите время : ";
+			cin >> time;
+			ob.insert(name, prior,time);
 			break;
 		case 2:
 			system("cls");
