@@ -10,70 +10,101 @@ struct client
 {
 	char position[128];
 	int prior;
-	int time;
 	client* next, *prev;
 };
 class printer
 {
-	
-public:
 	client* head;
 	client* tail;
-	client* headStat;
-	client* tailStat;
+public:
+	
 	printer()
 	{
 		head = NULL;
 		tail = NULL;
-		headStat = NULL;
-		tailStat = NULL;
 	}
 	printer(const printer& ob)
 	{
 
 	}
-	void stat(char* s, int prior, int time);
+	void addQueque(char* s,int prior,client*& head,client*& tail);
 	void showQueque();
-	void showStat();
-	void insert(char* s, int prior, int time);
+	int insert(char* s, int prior);
 };
-void printer::insert(char* s, int prior, int time)
+void printer::addQueque(char* s,int prior,client*& head,client*& tail)
 {
-	client* tmp = head;
-	client* elem = new client;
-	strcpy(elem->position, s);
-	elem->prior = prior;
-	elem->time = time;
-	if (head == NULL)
+	client* tmp = new client;
+	strcpy(tmp->position, s);
+	tmp->prior = prior;
+	tmp->next = NULL;
+	if (head != NULL)
 	{
-		elem->next = NULL;
-		elem->prev = NULL;
-		head = elem;
-		tail = elem;
+		tmp->prev = tail;
+		tail->next = tmp;
+		tail = tmp;
 	}
 	else
 	{
-		if (head->prior < elem->prior)
-		{
-			elem->next = head;
-			head->prev = elem;
-			head = elem;
-		}
-		else
-		{
-			while (tmp)
-			{
-				if (tmp->prior < prior)
-					tmp = tmp->next;
-				else
-					break;
-			}
-			elem->next = tmp->next;
-			tmp->next = elem;
-			tmp->next->prev = elem;
-			elem->prev = tmp;
-		}
+		tmp->prev = NULL;
+		tail = tmp;
+		head = tmp;
 	}
+}
+int printer::insert(char* s, int prior)
+{
+	client* elem = new client;
+	strcpy(elem->position, s);
+	elem->prior = prior;
+	if (head == NULL)
+	{
+		addQueque(elem->position, elem->prior, head, tail);
+		return 1;
+	}
+	if (head->prior < elem->prior)
+	{
+		addQueque(elem->position, elem->prior, head, tail);
+		return 1;
+	}
+	if(tail->prior==elem->prior)
+	{
+		addQueque(elem->position, elem->prior, head, tail);
+		return 1;
+	}
+	if (head!=NULL&&head->prior == elem->prior)
+	{
+		client* tmp = head;
+		while (tmp)
+		{
+			if (tmp->prior == elem->prior)
+				tmp = tmp->next;
+			else
+				break;
+		}
+		elem->next = tmp;
+		tmp = tmp->prev;
+		tmp->next = elem;
+		elem->prev = tmp;
+		elem->next->prev = elem;
+		return 1;
+	}
+	if (head != NULL&&tail->prior > elem->prior)
+	{
+		client* tmp = tail;
+		while (tmp)
+		{
+			if (tmp->prior == elem->prior)
+				tmp = tmp->prev;
+			else
+				break;
+		}
+		elem->next = tmp;
+		tmp = tmp->prev;
+		tmp->next = elem;
+		elem->prev = tmp;
+		elem->next->prev = elem;
+		return 1;
+	}
+	
 }
 void printer::showQueque()
 {
@@ -81,57 +112,12 @@ void printer::showQueque()
 	while (tmp)
 	{
 		cout << " Должность : " << tmp->position << endl;
-		cout << " Время печати(мин) : " << tmp->time << endl;
+		cout << " Приоритет : " << tmp->prior << endl;
 		tmp = tmp->next;
 		cout << endl;
 	}
 }
-void printer::stat(char* s, int prior, int time)
-{
-	client* tmp = new client;
-	client* temp = headStat;
-	bool flag = false;
-	while (temp)
-	{
-		if (strcmp(temp->position, s) == 0)
-		{
-			flag = true;
-			temp->time += time;
-			break;
-		}
-		temp = temp->next;
-	}
-	if (flag == false)
-	{
-		strcpy(tmp->position, s);
-		tmp->prior = prior;
-		tmp->time = time;
-		tmp->next = NULL;
-		if (headStat != NULL)
-		{
-			tmp->prev = tailStat;
-			tailStat->next = tmp;
-			tailStat = tmp;
-		}
-		else
-		{
-			tmp->prev = NULL;
-			headStat = tmp;
-			tailStat = tmp;
-		}
-	}
-}
-void printer::showStat()
-{
-	client* tmp = headStat;
-	while (tmp)
-	{
-		cout << " Должность : " << tmp->position << endl;
-		cout << " Время печати(мин) : " << tmp->time << endl;
-		tmp = tmp->next;
-		cout << endl;
-	}
-}
+
 int main()
 {
 	SetConsoleCP(1251);
@@ -140,7 +126,6 @@ int main()
 	int menu = 0;
 	char name[128];
 	int prior;
-	int time;
 	printer ob;
 	do
 	{
@@ -163,10 +148,7 @@ int main()
 				prior = 2;
 			if (strcmp(name, "охранник") == 0)
 				prior = 3;
-			cout << " Введите время печати ( в минутах ) : ";
-			cin >> time;
-			ob.insert(name, prior, time);
-			ob.stat(name, prior, time);
+			ob.insert(name, prior);
 			break;
 		case 2:
 			system("cls");
@@ -175,11 +157,7 @@ int main()
 			system("pause");
 			break;
 		case 3:
-			system("cls");
-			cout << " Статистика \n";
-			ob.showStat();
-			system("pause");
-			break;
+			
 		case 0:
 			cout << " До свидания ! \n";
 			break;
