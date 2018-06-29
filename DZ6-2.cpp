@@ -178,143 +178,86 @@ int main()
 		tmp->next->prev = elem;
 		elem->prev = tmp;
 =====================================
-	/*Разработать приложение, имитирующее очередь печати принтера.
-Должны быть клиенты, посылающие запросы на принтер, у каждого из которых есть свой приоритет.
-Каждый новый клиент попадает в очередь в зависимости от своего приоритета. Необходимо сохранять статистику печати (пользователь, время) в отдельной очереди.
-Предусмотреть вывод статистики на экран.*/
-#include <iostream>
+	#include<iostream>
 #include <Windows.h>
-#include <time.h>
 using namespace std;
 struct client
 {
-	char position[128];
+	char name[50];
 	int prior;
 	int time;
-	client* next, *prev;
+	client* next,*prev;
 };
+
 class printer
 {
-	
+	client* head,*tail;
 public:
-	client* head;
-	client* tail;
-	client* headStat;
-	client* tailStat;
 	printer()
 	{
-		head = NULL;
-		tail = NULL;
-		headStat = NULL;
-		tailStat = NULL;
+		head = tail = NULL;
 	}
 	printer(const printer& ob)
 	{
 
 	}
-	void stat(char* s, int prior, int time);
-	void showQueque();
-	void showStat();
-	void insert(char* s, int prior, int time);
+	
+	int push(char* str, int prior, int time);
+	
+	void show();
 };
-void printer::insert(char* s, int prior, int time)
+int printer::push(char* str,int prior,int time)
 {
-	client* tmp = head;
-	client* elem = new client;
-	strcpy(elem->position, s);
-	elem->prior = prior;
-	elem->time = time;
-	elem->prev = NULL;
-	elem->next = NULL;
+	client* new_cell = new client;
+	strcpy(new_cell->name, str);
+	new_cell->prior = prior;
+	new_cell->time = time;
 	if (head == NULL)
 	{
-		
-		head = elem;
-		tail = head;
+		new_cell->next = NULL;
+		new_cell->prev = NULL;
+		head = tail = new_cell;
+		return 1;
 	}
-	else
+	if (head!=NULL&&head->prior > new_cell->prior)
 	{
-		if (head->prior < elem->prior)
+		new_cell->next = head;
+		head->prev = new_cell;
+		new_cell->prev = NULL;
+		new_cell = head;
+		return 1;
+	}
+	if (head!=NULL&& tail->prior <= new_cell->prior)
+	{
+		new_cell->next = NULL;
+		new_cell->prev = tail;
+		tail->next = new_cell;
+		tail = new_cell;
+		
+		return 1;
+	}
+	if (tail->prior > new_cell->prior)
+	{
+		client* after_me = tail;
+		while (after_me!=head&&after_me->prior > new_cell->prior)
 		{
-			elem->next = head;
-			head->prev = elem;
-			head = elem;
+			after_me = after_me->prev;
 		}
-		else if (tmp->prior >= elem->prior)
-		{
-			while (tmp->prior >= elem->prior && tmp != tail)
-				tmp = tmp->next;
-			if (tmp == tail && elem->prior <= tmp->prior)
-			{
-				tail->next = tmp;
-				elem->prev = tail;
-				tail = elem;
-			}
-			else if (tmp->prior <= elem->prior)
-			{
-				elem->next = tmp;
-				tmp = tmp->prev;
-				tmp->next = elem;
-				elem->prev = tmp;
-				elem->next->prev = elem;
-			}
-		}
-			
+		new_cell->next = after_me->next;
+		after_me->next = new_cell;
+	    after_me->next->prev = new_cell;
+		new_cell->prev = after_me;
+		return 1;
 	}
 }
-void printer::showQueque()
+
+void printer::show()
 {
 	client* tmp = head;
 	while (tmp)
 	{
-		cout << " Должность : " << tmp->position << endl;
-		cout << " Время печати(мин) : " << tmp->time << endl;
-		tmp = tmp->next;
-		cout << endl;
-	}
-}
-void printer::stat(char* s, int prior, int time)
-{
-	client* tmp = new client;
-	client* temp = headStat;
-	bool flag = false;
-	while (temp)
-	{
-		if (strcmp(temp->position, s) == 0)
-		{
-			flag = true;
-			temp->time += time;
-			break;
-		}
-		temp = temp->next;
-	}
-	if (flag == false)
-	{
-		strcpy(tmp->position, s);
-		tmp->prior = prior;
-		tmp->time = time;
-		tmp->next = NULL;
-		if (headStat != NULL)
-		{
-			tmp->prev = tailStat;
-			tailStat->next = tmp;
-			tailStat = tmp;
-		}
-		else
-		{
-			tmp->prev = NULL;
-			headStat = tmp;
-			tailStat = tmp;
-		}
-	}
-}
-void printer::showStat()
-{
-	client* tmp = headStat;
-	while (tmp)
-	{
-		cout << " Должность : " << tmp->position << endl;
-		cout << " Время печати(мин) : " << tmp->time << endl;
+		cout << " Должность : " << tmp->name << endl;
+		cout << " Время : " << tmp->time << endl;
 		tmp = tmp->next;
 		cout << endl;
 	}
@@ -323,11 +266,10 @@ int main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	srand((unsigned)time(0));
-	int menu = 0;
-	char name[128];
-	int prior;
+	char name[50];
 	int time;
+	int prior;
+	int menu;
 	printer ob;
 	do
 	{
@@ -350,23 +292,18 @@ int main()
 				prior = 2;
 			if (strcmp(name, "охранник") == 0)
 				prior = 3;
-			cout << " Введите время печати ( в минутах ) : ";
+			cout << " Введите время : ";
 			cin >> time;
-			ob.insert(name, prior, time);
-			ob.stat(name, prior, time);
+			ob.push(name, prior, time);
 			break;
 		case 2:
 			system("cls");
 			cout << " Все клиенты  \n";
-			ob.showQueque();
+			ob.show();
 			system("pause");
 			break;
 		case 3:
-			system("cls");
-			cout << " Статистика \n";
-			ob.showStat();
-			system("pause");
-			break;
+
 		case 0:
 			cout << " До свидания ! \n";
 			break;
@@ -374,4 +311,6 @@ int main()
 
 	} while (menu != 0);
 	system("pause");
+	return 1;
 }
+
