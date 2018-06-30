@@ -1,313 +1,201 @@
-/*Разработать приложение, имитирующее очередь печати принтера.
-Должны быть клиенты, посылающие запросы на принтер, у каждого из которых есть свой приоритет.
-Каждый новый клиент попадает в очередь в зависимости от своего приоритета. Необходимо сохранять статистику печати (пользователь, время) в отдельной очереди.
-Предусмотреть вывод статистики на экран.*/
-#include <iostream>
+#include<iostream>
 #include <Windows.h>
-#include <time.h>
 using namespace std;
 struct client
 {
-	char position[128];
-	int time;
+	char name[50];
 	int prior;
-	client* next, *prev;
+	char time[10];
+	client* next,*prev;
 };
+struct statistic
+{
+	int prior;
+	char timeS[50];
+	statistic* next;
+};
+	
 class printer
 {
-	client* head;
-	client* tail;
+	statistic* headS, *tailS;
+	client* head,*tail;
 public:
-	
 	printer()
 	{
-		head = NULL;
-		tail = NULL;
+		head = tail = NULL;
+		headS = tailS = NULL;
 	}
-	printer(const printer& ob)
+	~printer()
 	{
-
+		clearQueque();
 	}
-	void addQueque(char* s,int prior,int time,client*& head,client*& tail);
-	void showQueque();
-	int insert(char* s, int prior,int time);
+	void push(char* str, int prior,char* time);
+	void show();
+	void pushS(int prior,char* time);
+	void showStat();
+	void clearQueque();
 };
-void printer::addQueque(char* s,int prior,int time,client*& head,client*& tail)
+void printer::clearQueque()
 {
-	client* tmp = new client;
-	strcpy(tmp->position, s);
-	tmp->prior = prior;
-	tmp->time = time;
-	tmp->next = NULL;
-	if (head != NULL)
+	client *Next;
+	statistic* next;
+	while (head) {
+		Next = head->next;
+		delete head;
+		head = Next;
+	}
+	while (headS)
 	{
-		tmp->prev = tail;
-		tail->next = tmp;
-		tail = tmp;
+		next = headS->next;
+		delete headS;
+		headS = next;
+	}
+}
+void printer::pushS(int prior, char* time)
+{
+	statistic* tmp = new statistic;
+	tmp->prior = prior;
+	strcpy(tmp->timeS, time);
+	tmp->next = NULL;
+	if (headS == NULL)
+	{
+		headS = tmp;
+		tailS = tmp;
 	}
 	else
 	{
-		tmp->prev = NULL;
-		tail = tmp;
-		head = tmp;
+		tailS->next = tmp;
+		tailS = tmp;
 	}
 }
-int printer::insert(char* s, int prior,int time)
+void printer::push(char* str,int prior,char* time)
 {
-	client* elem = new client;
-	strcpy(elem->position, s);
-	elem->prior = prior;
-	elem->time = time;
+	client* new_cell = new client;
+	strcpy(new_cell->name, str);
+	new_cell->prior = prior;
+	strcpy(new_cell->time, time);
+	new_cell->next = NULL;
+	new_cell->prev = NULL;
 	if (head == NULL)
 	{
-		addQueque(elem->position, elem->prior,elem->time, head, tail);
-		return 1;
+		head = tail = new_cell;
 	}
-	if (head->prior < elem->prior)
+	if (head!=NULL&&head->prior > new_cell->prior)
 	{
-		addQueque(elem->position, elem->prior,elem->time, head, tail);
-		return 1;
+		new_cell->next = head;
+		head->prev = new_cell;
+		new_cell->prev = NULL;
+		new_cell = head;
+		
 	}
-	if(tail->prior==elem->prior)
+	if (head!=NULL&& tail->prior <= new_cell->prior)
 	{
-		addQueque(elem->position, elem->prior,elem->time, head, tail);
-		return 1;
+		new_cell->next = NULL;
+		new_cell->prev = tail;
+		tail->next = new_cell;
+		tail = new_cell;
+		
+		
 	}
-	if (head!=NULL&&head->prior == elem->prior)
+	if (tail->prior > new_cell->prior)
 	{
-		client* tmp = head;
-		while (tmp)
+		client* after_me = tail;
+		while (after_me!=head&&after_me->prior > new_cell->prior)
 		{
-			if (tmp->prior == elem->prior)
-				tmp = tmp->next;
-			else
-				break;
+			after_me = after_me->prev;
 		}
-		elem->next = tmp;
-		tmp = tmp->prev;
-		tmp->next = elem;
-		elem->prev = tmp;
-		elem->next->prev = elem;
-		return 1;
+		new_cell->next = after_me->next;
+		after_me->next = new_cell;
+	    after_me->next->prev = new_cell;
+		new_cell->prev = after_me;
+		
 	}
-	if (head != NULL&&tail->prior>elem->prior)
-	{
-		client* tmp = head;
-		while (tmp)
-		{
-			if (tmp->prior < elem->prior&&tmp->prior>elem->prior)
-				tmp = tmp->next;
-			else
-				break;
-		}
-		elem->next = tmp;
-		tmp = tmp->prev;
-		tmp->next = elem;
-		elem->prev = tmp;
-		elem->next->prev = elem;
-		return 1;
-	}
-	
 }
-void printer::showQueque()
+
+void printer::show()
 {
 	client* tmp = head;
-	while (tmp)
+	while (tmp!=NULL)
 	{
-		cout << " Должность : " << tmp->position << endl;
-		cout << " Приоритет : " << tmp->prior << endl;
-		cout << " Время : " << tmp->time << endl;
+		cout << " Должность : " << tmp->name << endl;
 		tmp = tmp->next;
 		cout << endl;
 	}
 }
-
+void printer::showStat()
+{
+	statistic* st = headS;
+	client* tmp = head;
+	while (tmp)
+	{
+		if (tmp->prior == 1)
+		{
+			cout << " Должность : " << tmp->name << endl;
+			break;
+		}
+		tmp = tmp->next;
+	}
+	cout << " Время печати : ";
+	while (st)
+	{
+		if (st->prior == 1)
+			cout << st->timeS << " ";
+		st = st->next;
+	}
+	cout << endl;
+	st = headS;
+	tmp = head;
+	while (tmp)
+	{
+		if (tmp->prior == 2)
+		{
+			cout << " Должность : " << tmp->name << endl;
+			break;
+		}
+		tmp = tmp->next;
+	}
+	cout << " Время печати : ";
+	while (st)
+	{
+		if (st->prior == 2)
+			cout << st->timeS << " ";
+		st = st->next;
+	}
+	cout << endl;
+	st = headS;
+	tmp = head;
+	while (tmp)
+	{
+		if (tmp->prior == 3)
+		{
+			cout << " Должность : " << tmp->name << endl;
+			break;
+		}
+		tmp = tmp->next;
+	}
+	cout << " Время печати : ";
+	while (st)
+	{
+		if (st->prior == 3)
+			cout << st->timeS << " ";
+		st = st->next;
+	}
+	cout << endl;
+}
 int main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	srand((unsigned)time(0));
-	int menu = 0;
-	char name[128];
+	char name[50];
+	char time[10];
 	int prior;
-	int time;
+	int menu;
 	printer ob;
 	do
 	{
 		system("cls");
 		cout << " 1 - Добавить клиента \n";
-		cout << " 2 - Показать всех клиентов \n";
-		cout << " 3 - Статистика печати \n";
-		cout << " 0 - Выход \n";
-		cout << " Ваш выбор : ";
-		cin >> menu;
-		cin.ignore();
-		switch (menu)
-		{
-		case 1:
-			cout << " Введите должность клиента ( директор, менеджер, охраник) : ";
-			gets_s(name, 128);
-			if (strcmp(name, "директор") == 0)
-				prior = 1;
-			if (strcmp(name, "менеджер") == 0)
-				prior = 2;
-			if (strcmp(name, "охранник") == 0)
-				prior = 3;
-			cout << " Введите время : ";
-			cin >> time;
-			ob.insert(name, prior,time);
-			break;
-		case 2:
-			system("cls");
-			cout << " Все клиенты  \n";
-			ob.showQueque();
-			system("pause");
-			break;
-		case 3:
-			
-		case 0:
-			cout << " До свидания ! \n";
-			break;
-		}
-
-	} while (menu != 0);
-	system("pause");
-}
-========================================================
-	/*Разработать приложение, имитирующее очередь печати принтера.
-Должны быть клиенты, посылающие запросы на принтер, у каждого из которых есть свой приоритет.
-Каждый новый клиент попадает в очередь в зависимости от своего приоритета. Необходимо сохранять статистику печати (пользователь, время) в отдельной очереди.
-Предусмотреть вывод статистики на экран.*/
-#include <iostream>
-#include <Windows.h>
-#include <time.h>
-using namespace std;
-struct client
-{
-	char position[128];
-	int time;
-	int prior;
-	client* next, *prev;
-};
-class printer
-{
-	client* head;
-	client* tail;
-public:
-	
-	printer()
-	{
-		head = NULL;
-		tail = NULL;
-	}
-	printer(const printer& ob)
-	{
-
-	}
-	void addQueque(char* s,int prior,int time,client*& head,client*& tail);
-	void showQueque();
-	void addFront(char* s, int prior, int time, client*& head, client*& tail);
-	int insert(char* s, int prior,int time);
-};
-void printer::addFront(char* s, int prior, int time, client*& head, client*& tail)
-{
-	client* tmp = new client;
-	strcpy(tmp->position, s);
-	tmp->prior = prior;
-	tmp->time = time;
-	tmp->next = head;
-	tmp->prev = NULL;
-	head = tmp;
-}
-void printer::addQueque(char* s,int prior,int time,client*& head,client*& tail)
-{
-	client* tmp = new client;
-	strcpy(tmp->position, s);
-	tmp->prior = prior;
-	tmp->time = time;
-	tmp->next = NULL;
-	if (head != NULL)
-	{
-		tmp->prev = tail;
-		tail->next = tmp;
-		tail = tmp;
-	}
-	else
-	{
-		tmp->prev = NULL;
-		tail = tmp;
-		head = tmp;
-	}
-}
-int printer::insert(char* s, int prior,int time)
-{
-	client* elem = new client;
-	strcpy(elem->position, s);
-	elem->prior = prior;
-	elem->time = time;
-	if (head == NULL)
-	{
-		addQueque(elem->position, elem->prior,elem->time, head, tail);
-		return 1;
-	}
-	if (head->prior > elem->prior)
-	{
-		addFront(elem->position, elem->prior, elem->time, head, tail);
-		return 1;
-	}
-	if (head->prior < elem->prior)
-	{
-		addQueque(elem->position, elem->prior,elem->time, head, tail);
-		return 1;
-	}
-	if(tail->prior==elem->prior)
-	{
-		addQueque(elem->position, elem->prior,elem->time, head, tail);
-		return 1;
-	}
-	if (head->prior == elem->prior)
-	{
-		client* tmp = head;
-		while (tmp->prior!=prior&&tmp!=tail)
-		{
-			tmp = tmp->next;
-		}
-		elem->next = tmp;
-		tmp = tmp->prev;
-		tmp->next = elem;
-		elem->prev = tmp;
-		elem->next->prev = elem;
-		return 1;
-	}
-}
-void printer::showQueque()
-{
-	client* tmp = head;
-	while (tmp)
-	{
-		cout << " Должность : " << tmp->position << endl;
-		cout << " Приоритет : " << tmp->prior << endl;
-		cout << " Время : " << tmp->time << endl;
-		tmp = tmp->next;
-		cout << endl;
-	}
-}
-
-int main()
-{
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	srand((unsigned)time(0));
-	int menu = 0;
-	char name[128];
-	int prior;
-	int time;
-	printer ob;
-	do
-	{
-		system("cls");
-		cout << " 1 - Добавить клиента \n";
-		cout << " 2 - Показать всех клиентов \n";
+		cout << " 2 - Показать очередь клиентов \n";
 		cout << " 3 - Статистика печати \n";
 		cout << " 0 - Выход \n";
 		cout << " Ваш выбор : ";
@@ -317,25 +205,30 @@ int main()
 		{
 		case 1:
 			cout << " Введите должность клиента ( директор, менеджер, охранник) : ";
-			gets_s(name, 128);
+			gets_s(name, 50);
 			if (strcmp(name, "директор") == 0)
 				prior = 1;
 			if (strcmp(name, "менеджер") == 0)
 				prior = 2;
 			if (strcmp(name, "охранник") == 0)
 				prior = 3;
-			cout << " Введите время : ";
-			cin >> time;
-			ob.insert(name, prior,time);
+			cout << " Введите время (формат - чч:мм) : ";
+			gets_s(time, 10);
+			ob.push(name, prior,time);
+			ob.pushS(prior, time);
 			break;
 		case 2:
 			system("cls");
 			cout << " Все клиенты  \n";
-			ob.showQueque();
+			ob.show();
 			system("pause");
 			break;
 		case 3:
-			
+			system("cls");
+			cout << " Статистика печати \n";
+			ob.showStat();
+			system("pause");
+			break;
 		case 0:
 			cout << " До свидания ! \n";
 			break;
@@ -343,4 +236,5 @@ int main()
 
 	} while (menu != 0);
 	system("pause");
+	return 1;
 }
