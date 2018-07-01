@@ -22,6 +22,10 @@ public:
 	{
 		head = tail = NULL;
 	}
+	list(const list& ob)
+	{
+
+	}
 	~list()
 	{
 		delList();
@@ -95,16 +99,29 @@ public:
 	gai*& getRoot();
 	void show(gai* root);
 	void del(gai*& root);
-	gai* search(gai* root,char* number);
+	void search(gai* root,char* number);
 };
-gai* treeGai::search(gai* root,char* number)
+void treeGai::search(gai* root,char* number)
 {
 	if (strcmp(root->numberName, number) == 0)
-		return root;
+	{
+		cout << " Номер автомобиля : " << root->numberName << endl;
+		root->temp.show();
+	}
 	if (strcmp(root->numberName, number) < 0)
-		search(root->left, number);
+	{
+		if (root->left == NULL)
+			cout << " Автомобиля нет в базе данных \n";
+		else
+			search(root->left, number);
+	}
 	if (strcmp(root->numberName, number) > 0)
-		search(root->right, number);
+	{
+		if (root->right == NULL)
+			cout << " Автомобиля нет в базе данных \n";
+		else
+			search(root->right, number);
+	}
 }
 void treeGai::del(gai*& root)
 {
@@ -139,10 +156,16 @@ void treeGai::addTree(char* number,char* wrong,gai*& root)
 	}
 	else
 	{
-		if (strcmp(root->numberName,number)<0)
-			addTree(number,wrong, root->left);
-		if (strcmp(root->numberName, number)>0)
-			addTree(number, wrong,root->right);
+		if (strcmp(root->numberName, number) < 0)
+		{
+			addTree(number, wrong, root->left);
+			return;
+		}
+		if (strcmp(root->numberName, number) > 0)
+		{
+			addTree(number, wrong, root->right);
+			return;
+		}
 		if (strcmp(root->numberName, number) == 0)
 			root->temp.addList(wrong);
 	}
@@ -188,9 +211,11 @@ int main()
 			break;
 		case 3:
 			system("cls");
+			cin.ignore();
 			cout << " Введите номер автомобиля : ";
 			gets_s(name, M);
-			ob.show(ob.search(ob.getRoot(), name));
+			ob.search(ob.getRoot(), name);
+			system("pause");
 			break;
 		case 0:
 			cout << " До свидания \n";
