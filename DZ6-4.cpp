@@ -1,11 +1,12 @@
 /*Реализовать базу данных ГАИ по штрафным квитан¬циям с помощью бинарного дерева. Ключом будет служить номер автомашины, значением узла – 
 список правонарушений. Если квитанция добавляется в первый раз, то в дереве появляется новый узел, а в списке - данные по правонарушению; если нет, то данные заносятся в существующий список. 
 Необходимо также реализовать следующие операции:
-- Полная распечатка базы данных (по номерам машин и списку правонарушений, 
-  числящихся за ними).
+- Полная распечатка базы данных (по номерам машин и списку правонарушений, числящихся за ними).
 - Распечатка данных по заданному номеру.*/
 #include<iostream>
 #include <Windows.h>
+#define N 256
+#define M 32
 
 using namespace std;
 struct offense
@@ -47,11 +48,11 @@ void list::addList(char* key)
 }
 void list::show()
 {
-	cout << " Нарушения : ";
+	cout << " Нарушения : \n";
 	offense* tmp = head;
 	while (tmp)
 	{
-		cout<< tmp->wrong << ", ";
+		cout <<"\t"<<"     "<< tmp->wrong << endl;
 		tmp = tmp->next;
 	}
 	cout << endl;
@@ -90,11 +91,21 @@ public:
 	{
 		del(root);
 	}
-	void addTree(char* key, char* key2, gai*& root);
+	void addTree(char* number, char* wrong, gai*& root);
 	gai*& getRoot();
-	void show(gai* elem);
-	void del(gai*& elem);
+	void show(gai* root);
+	void del(gai*& root);
+	gai* search(gai* root,char* number);
 };
+gai* treeGai::search(gai* root,char* number)
+{
+	if (strcmp(root->numberName, number) == 0)
+		return root;
+	if (strcmp(root->numberName, number) < 0)
+		search(root->left, number);
+	if (strcmp(root->numberName, number) > 0)
+		search(root->right, number);
+}
 void treeGai::del(gai*& root)
 {
 	if (root != NULL)
@@ -115,25 +126,25 @@ void treeGai::show(gai* root)
 		show(root->right);
 	}
 }
-void treeGai::addTree(char* key,char* key2,gai*& root)
+void treeGai::addTree(char* number,char* wrong,gai*& root)
 {
 	if (root == NULL)
 	{
 		root = new gai;
-		root->numberName =new char[strlen(key)+1];
-		strcpy(root->numberName, key);
-		root->temp.addList(key2);
+		root->numberName =new char[strlen(number)+1];
+		strcpy(root->numberName, number);
+		root->temp.addList(wrong);
 		root->left = NULL;
 		root->right = NULL;
 	}
 	else
 	{
-		if (strcmp(root->numberName,key)<0)
-			addTree(key,key2, root->left);
-		if (strcmp(root->numberName, key)>0)
-			addTree(key, key2,root->right);
-		if (strcmp(root->numberName, key) == 0)
-			root->temp.addList(key2);
+		if (strcmp(root->numberName,number)<0)
+			addTree(number,wrong, root->left);
+		if (strcmp(root->numberName, number)>0)
+			addTree(number, wrong,root->right);
+		if (strcmp(root->numberName, number) == 0)
+			root->temp.addList(wrong);
 	}
 }
 gai*& treeGai::getRoot()
@@ -144,8 +155,9 @@ int main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	char numberName[50];
-	char offense[128];
+	char numberName[M];
+	char offense[N];
+	char name[M];
 	int menu;
 	treeGai ob;
 	do
@@ -160,18 +172,25 @@ int main()
 		switch (menu)
 		{
 		case 1:
+			system("cls");
 			cin.ignore();
-			cout << " Введите номер машины : ";
-			gets_s(numberName, 50);
+			cout << " Введите номер автомобиля : ";
+			gets_s(numberName, M);
 			cout << " Введите правонарушение : ";
-			gets_s(offense, 128);
+			gets_s(offense, N);
 			ob.addTree(numberName,offense,ob.getRoot());
 			break;
 		case 2:
+			system("cls");
+			cout << " Полная база данных \n";
 			ob.show(ob.getRoot());
 			system("pause");
 			break;
 		case 3:
+			system("cls");
+			cout << " Введите номер автомобиля : ";
+			gets_s(name, M);
+			ob.show(ob.search(ob.getRoot(), name));
 			break;
 		case 0:
 			cout << " До свидания \n";
