@@ -157,15 +157,9 @@ void treeGai::addTree(char* number,char* wrong,gai*& root)
 	else
 	{
 		if (strcmp(root->numberName, number) < 0)
-		{
 			addTree(number, wrong, root->left);
-			return;
-		}
 		if (strcmp(root->numberName, number) > 0)
-		{
 			addTree(number, wrong, root->right);
-			return;
-		}
 		if (strcmp(root->numberName, number) == 0)
 			root->temp.addList(wrong);
 	}
