@@ -47,10 +47,11 @@ void list::addList(char* key)
 }
 void list::show()
 {
+	cout << " Нарушения : ";
 	offense* tmp = head;
 	while (tmp)
 	{
-		cout << " Нарушения : " << tmp->wrong << endl;
+		cout<< tmp->wrong << ", ";
 		tmp = tmp->next;
 	}
 	cout << endl;
@@ -128,7 +129,7 @@ void treeGai::addTree(char* key,char* key2,gai*& root)
 	else
 	{
 		if (strcmp(root->numberName,key)<0)
-			addTree(key,key, root->left);
+			addTree(key,key2, root->left);
 		if (strcmp(root->numberName, key)>0)
 			addTree(key, key2,root->right);
 	}
