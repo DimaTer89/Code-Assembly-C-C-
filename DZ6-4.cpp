@@ -132,6 +132,8 @@ void treeGai::addTree(char* key,char* key2,gai*& root)
 			addTree(key,key2, root->left);
 		if (strcmp(root->numberName, key)>0)
 			addTree(key, key2,root->right);
+		if (strcmp(root->numberName, key) == 0)
+			root->temp.addList(key2);
 	}
 }
 gai*& treeGai::getRoot()
