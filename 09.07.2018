@@ -1,0 +1,114 @@
+#include <windows.h>
+#include <stdio.h> 
+#define PROMPT "Формат ввода <число> <операция> <число>:" 
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	system("cls");
+
+	float a, b;
+	char opr;
+	float result;
+	while (puts(PROMPT), result = 0, scanf("%f%c%f", &a, &opr, &b) == 3)
+	{
+		
+		switch (opr)
+		{
+		case '+':
+			result = a + b;
+			break;
+		case '-':
+			result = a - b;
+			break;
+		case '*':
+			result = a * b;
+			break;
+		case '/':
+			if (b == 0)
+			{
+				printf(" На ноль делить нельзя \n");
+				break;
+			}
+			else
+			{
+				result = a / b;
+				break;
+			}
+		default:
+			printf("ОШИБКА **** неверен знак операции\n");
+			system("pause");
+			exit(1);
+		}
+		if(result)
+		   printf("Результат равен %g\n", result);
+	}
+	if (!result)
+	{
+		printf("ОШИБКА **** неправильный ввод данных\n");
+		system("pause");
+		exit(0);
+	}
+	system("pause");
+}
+=============================================
+#include <windows.h>
+#include <stdio.h> 
+#define PROMPT "Формат ввода <число> <операция> <число>:" 
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	system("cls");
+
+	float a, b;
+	char opr;
+	float result;
+	while (puts(PROMPT), result = 0, scanf("%f%c%f", &a, &opr, &b) == 3)
+	{
+
+		switch (opr)
+		{
+		case '+':
+			result = a + b;
+			break;
+		case '-':
+			result = a - b;
+			break;
+		case '*':
+			result = a * b;
+			break;
+		case '/':
+			try
+			{
+				if (b == 0)
+				{
+					throw b;
+				}
+				else
+				{
+					result = a / b;
+					break;
+				}
+			}
+			catch (float b)
+			{
+				printf(" На ноль делить нельзя !\n");
+				break;
+			}
+		default:
+			printf("ОШИБКА **** неверен знак операции\n");
+			system("pause");
+			exit(1);
+		}
+		if (result || opr != '/')
+			printf("Результат равен %g\n", result);
+	}
+	if (!result)
+	{
+		printf("ОШИБКА **** неправильный ввод данных\n");
+		system("pause");
+		exit(0);
+	}
+	system("pause");
+}
