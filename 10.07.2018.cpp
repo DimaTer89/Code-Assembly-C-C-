@@ -68,9 +68,9 @@ figure* factory()
 		do
 		{
 			cin >> rad;
-			if (rad < 0)
-				cout << " Значение должно быть положительным, введите снова : ";
-		} while (rad < 0);
+			if (rad < 1)
+				cout << " Значение должно быть больше нуля, введите снова : ";
+		} while (rad < 1);
 		return new circle(rad);
 		break;
 	case 1:
@@ -80,16 +80,16 @@ figure* factory()
 		do
 		{
 			cin >> base;
-			if (base < 0)
-				cout << " Значение должно быть положительным, введите снова : ";
-		} while (base < 0);
+			if (base < 1)
+				cout << " Значение должно быть больше нуля, введите снова : ";
+		} while (base < 1);
 		cout << " Введите высоту : ";
 		do
 		{
 			cin >>height;
-			if (height < 0)
-				cout << " Значение должно быть положительным, введите снова : ";
-		} while (height < 0);
+			if (height < 1)
+				cout << " Значение должно быть больше нуля, введите снова : ";
+		} while (height < 1);
 		return new triangle(base, height);
 		break;
 	case 2:
@@ -99,16 +99,16 @@ figure* factory()
 		do
 		{
 			cin >> side1;
-			if (side1 < 0)
-				cout << " Значение должно быть положительным, введите снова : ";
-		} while (side1 < 0);
+			if (side1 < 1)
+				cout << " Значение должно быть больше нуля, введите снова : ";
+		} while (side1 < 1);
 		cout << " Введите длину второй стороны : ";
 		do
 		{
 			cin >> side2;
-			if (side2 < 0)
-				cout << " Значение должно быть положительным, введите снова : ";
-		} while (side2 < 0);
+			if (side2 < 1)
+				cout << " Значение должно быть больше нуля, введите снова : ";
+		} while (side2 < 1);
 		return new rectangle(side1, side2);
 		break;
 	}
