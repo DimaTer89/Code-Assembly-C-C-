@@ -151,3 +151,164 @@ int main()
 	system("pause");
 	return 0;
 }
+==========================================
+	// Шаблонная версия figure-иерархии.
+#include <windows.h>
+#include <iostream>
+#include <cstdlib>
+#include <time.h>
+using namespace std;
+
+template <class T> class figure
+{
+protected:
+	T x, y;
+public:
+	figure(T i, T j)
+	{
+		x = i;
+		y = j;
+	}
+	virtual T area() = 0;
+};
+
+template <class T> class triangle :public figure <T>
+{
+public:
+	triangle(T i, T j) :figure<T>(i, j)
+	{
+	}
+	virtual T area()
+	{
+		return x*0.5*y;
+	}
+};
+
+template <class T> class rectangle :public figure<T>
+{
+public:
+	rectangle(T i, T j) :figure<T>(i, j)
+	{
+	}
+	virtual T area()
+	{
+		return x*y;
+	}
+};
+
+template <class T> class circle :public figure<T>
+{
+public:
+	circle(T i, T j = 0) :figure<T>(i, j)
+	{
+	}
+	virtual T area()
+	{
+		return 3.14159268*x*x;
+	}
+};
+
+// Фабрика объектов, генерируемых из класса figure.
+template<class T>
+figure<T>* generator()
+{
+	circle<T>* cir = NULL;
+	triangle<T>* tri = NULL;
+	rectangle<T>* rec = NULL;
+	switch (rand() % 3)
+		{
+		case 0:
+			
+			T rad;
+			cout << " *****Площадь круга***** \n";
+			cout << " Введите радиус круга : ";
+			do
+			{
+				cin >> rad;
+				if (rad < 1)
+					cout << " Значение должно быть больше нуля, введите снова : ";
+			} while (rad < 1);
+			cir=new circle<T>(rad);
+			return cir;
+			break;
+		case 1:
+			
+			T base, height;
+			cout << " *****Площадь треугольника***** \n";
+			cout << " Введите длину основания : ";
+			do
+			{
+				cin >> base;
+				if (base < 1)
+					cout << " Значение должно быть больше нуля, введите снова : ";
+			} while (base < 1);
+			cout << " Введите высоту : ";
+			do
+			{
+				cin >> height;
+				if (height < 1)
+					cout << " Значение должно быть больше нуля, введите снова : ";
+			} while (height < 1);
+			tri=new triangle<double>(base, height);
+			return tri;
+			break;
+		case 2:
+			
+			T side1, side2;
+			cout << " *****Площадь прямоугольника***** \n";
+			cout << " Введите длину первой стороны : ";
+			do
+			{
+				cin >> side1;
+				if (side1 < 1)
+					cout << " Значение должно быть больше нуля, введите снова : ";
+			} while (side1 < 1);
+			cout << " Введите длину второй стороны : ";
+			do
+			{
+				cin >> side2;
+				if (side2 < 1)
+					cout << " Значение должно быть больше нуля, введите снова : ";
+			} while (side2 < 1);
+			rec=new rectangle<double>(side1, side2);
+			return rec;
+			break;
+		}
+		return 0;
+}
+
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	system("cls");
+
+	srand((unsigned)time(NULL));
+	figure<double>* p;
+	int i;
+	int t = 0;
+	int c = 0;
+	int r = 0;
+	// генерируем и подсчитываем объекты
+	for (i = 0; i<10; i++)
+	{
+		p = generator<double>();
+		cout << "Объект имеет тип " << typeid(*p).name();
+		cout << ". ";
+		// учитываем объект
+		if (typeid(*p) == typeid(triangle<double>))
+			t++;
+		if (typeid(*p) == typeid(rectangle<double>))
+			r++;
+		if (typeid(*p) == typeid(circle<double>))
+			c++;
+		cout << "Площадь равна " << p->area() << endl;
+	}
+	cout << endl;
+	cout << "Сгенерированы следующие объекты:\n";
+	cout << " треугольников:   " << t << endl;
+	cout << " прямоугольников: " << r << endl;
+	cout << " кругов:          " << c << endl;
+	system("pause");
+	return 0;
+}
