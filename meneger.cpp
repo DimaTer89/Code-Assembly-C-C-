@@ -110,16 +110,46 @@ bool ShowDir(char path[])
 	_findclose(result);
 	return true;
 }
-void CopyFile()
+bool CopyFile(char* source, char* destination)
 {
-
+	const int size = 65536;
+	FILE* src;
+	FILE* dest;
+	//Открытие Файла
+	if (!(src = fopen(source, "rb")))
+		return false;
+	//выделение памяти под буффер
+	char* data = new char[size];
+	if (!data)
+		return false;
+	//Открытие файла, куда будет производиться копирование
+	if (!(dest = fopen(destination, "wb")))
+	{
+		delete[]data;
+		return false;
+	}
+	int realsize;
+	while (!feof(src))
+	{
+		//Чтение данных из файла
+		realsize = fread(data, sizeof(char), size, src);
+		//Запись данных в файл
+		fwrite(data, sizeof(char), realsize, dest);
+	}
+	//Закрытие файлов
+	fclose(src);
+	fclose(dest);
+	return true;
 }
+
 void main()
 {
 	system("cls");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	int menu = 0;
+	char source[size_1];
+	char destination[size_1];
 	char info[MAX_PATH];
 	//В данной переменной будет храниться
 	//путь к Директории
@@ -131,99 +161,79 @@ void main()
 	char temp[MAX_PATH];
 	//Получаем Путь к текущей Директории
 	GetCurrentDirectoryA(sizeof(path), path);
-	bool flag = true;
+	bool flag;
 	//Показ содержимого текущей директории
-	ShowDir(path);
 	do
 	{
-		cout << " \n 1 - вывод каталого-файловой структуры диска\n";
+		system("cls");
+		cout << " 1 - вывод каталого-файловой структуры диска\n";
 		cout << " 2 - переименование файлов\n";
 		cout << " 3 - переименование каталогов\n";
 		cout << " 4 - удаление файлов\n";
 		cout << " 5 - удаление каталогов\n";
 		cout << " 6 - копирование файлов\n";
+		cout << " 0 - завершить работу \n";
 		cout << " ===> ";
 		cin >> menu;
 		switch (menu)
 		{
 		case 1:
-			cout << " Введите диск : ";
 			cin.ignore();
-			//Ввод команды пользователя
-			gets_s(action, size_1);
-			//Убираем пробелы и слэши справа
-			RemoveRSpacesAndRSlashes(action);
-			//Переход в корневой каталог
-			//if (!strcmpi(action, "root"))
-			//{
-				path[2] = '\0';
-				ShowDir(action);
-			//}
-			//Проверка на желание пользователя выйти
-			/*else
-				if (!strcmpi(action, "exit"))
+			flag = true;
+			while(flag)
+			{
+				ShowDir(path);
+				cout << " \nВведите команду : ";
+				//Ввод команды пользователя
+				gets_s(action, size_1);
+				//Убираем пробелы и слэши справа
+				RemoveRSpacesAndRSlashes(action);
+				//Переход в корневой каталог
+				if (!strcmpi(action, "root"))
 				{
-					flag = false;
+					path[2] = '\0';
+					ShowDir(path);
 				}
-			//Проверка на команду cd
+				//Проверка на желание пользователя выйти
 				else
-					//Функция strnicmp() осуществляет лексикографическое сравнение не более чем count символов из двух строк,
-					//она не делает различия между буквами верхнего и нижнего регистров.
-					if (!strnicmp(action, "cd", 2))
+					if (!strcmpi(action, "exit"))
 					{
-						//Показ содержимого текущей директории
-						if ((!strcmpi(action, "cd")))
+						flag = false;
+					}
+				//Проверка на команду cd
+					else
+						//Функция strnicmp() осуществляет лексикографическое сравнение не более чем count символов из двух строк,
+						//она не делает различия между буквами верхнего и нижнего регистров.
+						if (!strnicmp(action, "cd", 2))
 						{
-							//Показ Директории
-							ShowDir(path);
-						}
-						//Команда cd была дана с параметрами
-						else
-							if (!strnicmp(action, "cd ", 3))
+							//Показ содержимого текущей директории
+							if ((!strcmpi(action, "cd")))
 							{
-								//Находим индекс параметра
-								//функция size_t strspn(const char* str,const char* sym)
-								//осуществляет определение максимальной длины участка строки,
-								//содержащего только указанные символы.
-								//str – указатель на строку, в которой ведется поиск.
-								//sym – указатель на строку с набором символов, которые должны входить в участок строки str.
-								//Возвращаемое значение: длина начального участка строки, содержащая только символы, указанные в аргументе sym.
-								int index = strspn(action + 2, " ");
-								if (index)
+								//Показ Директории
+								ShowDir(path);
+							}
+							//Команда cd была дана с параметрами
+							else
+								if (!strnicmp(action, "cd ", 3))
 								{
-									//Проверка на полный путь к Директории
-									if (strchr(action + index + 2, ':'))
+									//Находим индекс параметра
+									//функция size_t strspn(const char* str,const char* sym)
+									//осуществляет определение максимальной длины участка строки,
+									//содержащего только указанные символы.
+									//str – указатель на строку, в которой ведется поиск.
+									//sym – указатель на строку с набором символов, которые должны входить в участок строки str.
+									//Возвращаемое значение: длина начального участка строки, содержащая только символы, указанные в аргументе sym.
+									int index = strspn(action + 2, " ");
+									if (index)
 									{
-										//Попытка отобразить содержимое
-										//Директории
-										if (ShowDir(action + index + 2))
+										//Проверка на полный путь к Директории
+										if (strchr(action + index + 2, ':'))
 										{
-											strcpy(path, action + index + 2);
-										}
-										else
-										{
-											//Произошла Ошибка
-											ShowCurrentDir(path, temp);
-										}
-									}
-									//Поднимаемся в родительский каталог
-									else
-										if (!strcmp(action + index + 2, ".."))
-										{
-											char* result = strrchr(path, '\\');
-											if (result)
+											//Попытка отобразить содержимое
+											//Директории
+											if (ShowDir(action + index + 2))
 											{
-												int delta = result - path;
-												strncpy(temp, path, delta);
-												temp[delta] = '\0';
-											}
-											else
-											{
-												strcpy(temp, path);
-											}
-											if (ShowDir(temp))
-											{
-												strcpy(path, temp);
+												strcpy(path, action + index + 2);
 											}
 											else
 											{
@@ -231,56 +241,82 @@ void main()
 												ShowCurrentDir(path, temp);
 											}
 										}
-									//Показ Директории
+										//Поднимаемся в родительский каталог
 										else
-											if (!strcmp(action + index + 2, "."))
+											if (!strcmp(action + index + 2, ".."))
 											{
-												ShowDir(path);
+												char* result = strrchr(path, '\\');
+												if (result)
+												{
+													int delta = result - path;
+													strncpy(temp, path, delta);
+													temp[delta] = '\0';
+												}
+												else
+												{
+													strcpy(temp, path);
+												}
+												if (ShowDir(temp))
+												{
+													strcpy(path, temp);
+												}
+												else
+												{
+													//Произошла Ошибка
+													ShowCurrentDir(path, temp);
+												}
 											}
+										//Показ Директории
 											else
-												if (!strcmp(action + index + 2, "/"))
+												if (!strcmp(action + index + 2, "."))
 												{
 													ShowDir(path);
 												}
 												else
-												{
-													//Был Дан неполный путь
-													strcpy(temp, path);
-													strcat(temp, "\\");
-													strcat(temp, action + index + 2);
-													//Попытка отобразить содержимое
-													//Директории
-													if (ShowDir(temp))
+													if (!strcmp(action + index + 2, "/"))
 													{
-														strcpy(path, temp);
+														ShowDir(path);
 													}
 													else
 													{
-														//Произошла Ошибка
-														ShowCurrentDir(path, temp);
+														//Был Дан неполный путь
+														strcpy(temp, path);
+														strcat(temp, "\\");
+														strcat(temp, action + index + 2);
+														//Попытка отобразить содержимое
+														//Директории
+														if (ShowDir(temp))
+														{
+															strcpy(path, temp);
+														}
+														else
+														{
+															//Произошла Ошибка
+															ShowCurrentDir(path, temp);
+														}
 													}
-												}
+									}
+									else
+									{
+										//Показ Директории
+										ShowDir(path);
+									}
 								}
 								else
 								{
 									//Показ Директории
 									ShowDir(path);
 								}
-							}
-							else
-							{
-								//Показ Директории
-								ShowDir(path);
-							}
-					}
-					else
-					{
-						strcpy(info, "Такой команды программа не предусматривает. Для продолжения - любая клавиша.");
-						printf("%s\n", info);
-						getch();
-						//Показ Директории
-						ShowDir(path);
-					}*/
+						}
+						else
+						{
+							strcpy(info, "Такой команды программа не предусматривает. Для продолжения - любая клавиша.");
+							printf("%s\n", info);
+							getch();
+							//Показ Директории
+							ShowDir(path);
+						}
+			}
 			break;
 		case 2:
 			RenameFile();
@@ -294,12 +330,22 @@ void main()
 		case 5:
 			break;
 		case 6:
+			cin.ignore();
+			cout << " Введите файл и путь к нему : ";
+			gets_s(source, size_1);
+			cout << " Введите путь куда скопировать : ";
+			gets_s(destination, size_1);
+			if (!CopyFile(source, destination))
+				cout << "\nОшибка при работе	с файлами при копировании\n";
+			break;
+		case 0:
+			cout << " До свидания \n";
+			system("pause");
 			break;
 		default:
 			cout << " Неверно выбрано меню \n";
 			system("pause");
 		}
-	} while (flag);
-	system("pause");
+	} while (menu != 0);
 }
 
