@@ -162,6 +162,11 @@ void RemoveDirectoryWithFile(char* path)
     _finddata_t* fileof = new _finddata_t;
 	long done = _findfirst(data, fileof);
 	int flag = done;
+	if (flag == -1)
+	{
+		cout<< "Такой Директории Нет\n";
+		return;
+	}
 	while (flag != -1)
 	{
 		strcpy(dir, path);
