@@ -1,5 +1,6 @@
 #include <iostream>
 #include <windows.h>
+#include <direct.h>
 #include <io.h>
 #include <stdio.h>
 #include <conio.h>
@@ -33,10 +34,10 @@ void RenameFile()
 {
 	char oldName[50], newName[50];
 	//В oldName запомним существующее имя
-	cout << "Введите существующее наименование файла:";
+	cout << "Введите существующее наименование файла( путь и имя директории ):";
 	cin >> oldName;
 	//В newName запомним  новое имя
-	cout << "Введите новое наименование файла:";
+	cout << "Введите новое наименование файла( путь и имя директории ):";
 	cin >> newName;
 	//Произведем переименование и проверку результата
 	if (rename(oldName, newName) != 0)
@@ -48,7 +49,7 @@ void RemoveFile()
 {
 	char Name[50];
 	//Получаем имя и путь к удаляемому файлу
-	cout << "Введите существующее наименование файла:";
+	cout << "Введите существующее наименование файла( путь и имя директории ):";
 	cin >> Name;
 	//Удаляем файл и проверяем результат
 	if (remove(Name) != 0)
@@ -61,10 +62,10 @@ void RenameDirectory()
 	char oldName[50], newName[50];
 	//В одной переменной запомним
 	//существующее имя (oldName),
-	cout << "Введите существующее наименование директория:";
+	cout << "Введите существующее наименование директория( путь и имя директории ):";
 	cin >> oldName;
 	//А в другой новое имя(newName)
-	cout << "Введите новое наименование директория:";
+	cout << "Введите новое наименование директория( путь и имя директории ):";
 	cin >> newName;
 	//Произведем переименование и проверку результата
 	if (rename(oldName, newName) != 0)
@@ -72,7 +73,18 @@ void RenameDirectory()
 	else
 		cout << "Ok...\n\n";
 }
-
+void RemoveDirectory()
+{
+	char Name[50];
+	//Получаем имя и путь к удаляемой директории
+	cout << "Введите существующее наименование директория( путь и имя директории ) : ";
+	cin >> Name;
+	//Удаляем директорию и проверяем результат
+	if (_rmdir(Name) == -1)
+		cout << "Ошибка!!! Не удалось удалить директорий.\n";
+	else
+		cout << "Ok...\n";
+}
 //Показ на экран содержимого папки
 bool ShowDir(char path[])
 {
@@ -141,12 +153,33 @@ bool CopyFile(char* source, char* destination)
 	fclose(dest);
 	return true;
 }
-
+void RemoveDirectoryWithFile(char* path)
+{
+	char dir[70];
+	char data[70];
+	strcpy(data, path);
+	strcat(data, "*.*");
+    _finddata_t* fileof = new _finddata_t;
+	long done = _findfirst(data, fileof);
+	int flag = done;
+	while (flag != -1)
+	{
+		strcpy(dir, path);
+		strcat(dir, fileof->name);
+		remove(dir);
+		flag = _findnext(done, fileof);
+	}
+	strcpy(dir, path);
+	_rmdir(dir);
+	_findclose(done);
+	delete fileof;
+}
 void main()
 {
 	system("cls");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
+	int key = 0;
 	int menu = 0;
 	char source[size_1];
 	char destination[size_1];
@@ -183,9 +216,18 @@ void main()
 			while(flag)
 			{
 				ShowDir(path);
-				cout << " \nВведите команду : ";
+				cout << "\n Команды по работе \n "
+					 << "cd Путь - переход в другую директорию\n"
+					 << " cd .. - показ содержимого родительского каталога и переход\n"
+					 << " cd или cd . - показ содержимого текущего каталога\n"
+					 << " exit - выход из программы\n"
+					 << " root - переход в корневой каталог\n";
+				cout << " Введите команду : ";
 				//Ввод команды пользователя
 				gets_s(action, size_1);
+				if (strcmp(action, "\0") == 0)
+				     continue;
+				
 				//Убираем пробелы и слэши справа
 				RemoveRSpacesAndRSlashes(action);
 				//Переход в корневой каталог
@@ -319,24 +361,61 @@ void main()
 			}
 			break;
 		case 2:
+			ShowDir(path);
+			cout << endl;
 			RenameFile();
+			system("pause");
 			break;
 		case 3:
+			ShowDir(path);
+			cout << endl;
 			RenameDirectory();
+			system("pause");
 			break;
 		case 4:
+			ShowDir(path);
+			cout << endl;
 			RemoveFile();
+			system("pause");
 			break;
 		case 5:
-			break;
-		case 6:
 			cin.ignore();
-			cout << " Введите файл и путь к нему : ";
+			ShowDir(path);
+			cout << " \nВведите директорию( например d:\\name\\ ) : ";
 			gets_s(source, size_1);
-			cout << " Введите путь куда скопировать : ";
+			cout << " Удалить папку и вложенные файлы ( 1 - Да / 2 - Нет): ";
+			cin >> key;
+			if (key == 1)
+			{
+				RemoveDirectoryWithFile(source);
+				system("pause");
+				break;
+			}
+			else
+     			break;
+		case 6:
+			ShowDir(path);
+			cin.ignore();
+			cout << " \nВведите путь и имя файла : ";
+			gets_s(source, size_1);
+			cout << " Введите путь и имя файла назначения : ";
 			gets_s(destination, size_1);
+			try
+			{
+				if (strcmp(source, destination) == 0)
+					throw (char*)" Ошибка \n";
+			}
+			catch (const char* str)
+			{
+				cout << str;
+				system("pause");
+				break;
+			}
 			if (!CopyFile(source, destination))
-				cout << "\nОшибка при работе	с файлами при копировании\n";
+				cout << " Ошибка копирования \n";
+			else
+				cout << " Ок...\n";
+			system("pause");
 			break;
 		case 0:
 			cout << " До свидания \n";
