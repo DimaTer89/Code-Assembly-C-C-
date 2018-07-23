@@ -465,3 +465,39 @@ void main()
 		}
 	} while (menu != 0);
 }
+// Использование функций read() и write().
+#include <windows.h>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+int main()
+{
+	system("cls");
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+	char str[80];
+	cout << " Введите строку : ";
+	gets_s(str, 80);
+	ofstream out("test.txt", ios::out| ios::binary);
+	if (!out)
+	{
+		cout << "He удается открыть файл для записи.\n";
+		return 1;
+	}
+	out.write((const char*)str, strlen(str));
+	out.close();
+	ifstream in("test.txt", ios::in | ios::binary);
+	if (!in)
+	{
+		cout << "He удается открыть файл для чтения.\n";
+		return 1;
+	}
+	in.read((char*)str, sizeof(str));
+	in.close();
+	cout << " Считаная строка = " << str << endl;
+	cout << "\nДанные успешно записаны в файл и считаны из него.\n";
+	return 0;
+}
