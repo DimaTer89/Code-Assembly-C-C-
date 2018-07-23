@@ -303,4 +303,198 @@ void PC::save_file(PC* pc_save, int kol, char* filename, FILE* out)
 	 delete[]komp;
 	 system("pause");
  }
+/*1.Создайте класс Computer. Необходимо хранить следующие данные:
+Тип процессора;
+Оперативная память (тип, объём);
+Жёсткий диск (тип, объём);
+Видеокарта;
+Монитор (тип, размер экрана);
+Производитель;
+Месяц и год выпуска.
+Гарантийный срок.
+2. Создать массив объектов. Ввод данных осуществить через клавиатуру.
+3. Вывести:
+a) список компьютеров с заданным типом процессора;
+b) список компьютеров с требуемым объёмом оперативной памяти и объёмом жёсткого диска больше или раной заданной;
+c) подсчитать количество компьютеров с мониторами, размер экрана которых равен 22”.
+4. При необходимости используйте:
+- перегруженные конструкторы;
+- конструктор копирования;
+- константные функции-члены (например, для отображения информации о Типе процессора и т.д.).
+5. Иметь возможность сохранять данные в файл и считывать из него.*/
+#include <iostream>
+#include <Windows.h>
+#define N 64
+using namespace std;
+struct PC
+{
+	char* proc;
+	char* ozu;
+	int volume_ozu;
+	char* hard;
+	int volume_hard;
+	char* videokard;
+	char* monitor;
+	int size_monitor;
+	char* proiz;
+	char* month_year;
+	char* garantia;
+	PC* next;
+};
+class PC
+{
+	PC* head, *tail;
+public:
+	static int mon_kol;
+	PC()
+	{
+		head = tail = 0;
+	}
+	void init(char* pro, char* oz, int size_ozu, char* had, int size_hard, char* video, char* mon, int size_mon, char* proz, char* mon_yer, char* garant)
+	{
+		
+	}
+	
+	
+	void show();
+	void save_file(PC* pc_save, int kol, char* filename, FILE* out);
+};
+
+
+int PC::mon_kol = 0;
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	char CPU[N];
+	char ozu[N];
+	int size_ozu;
+	char hard[N];
+	int size_hard;
+	char video[N];
+	char monitor[N];
+	int size_mon;
+	char maker[N];
+	char month_year[N];
+	char garant[N];
+	int kol;
+	int menu;
+	cout << " Введите количество компьютеров : ";
+	cin >> kol;
+	cin.ignore();
+	for (int i = 0; i < kol; i++)
+	{
+		system("cls");
+		cout << " Тип процессора : ";
+		gets_s(CPU, N);
+		cout << " Оперативная память (тип) : ";
+		gets_s(ozu, N);
+		cout << " Оперативная память (объём в мегабайтах) : ";
+		cin >> size_ozu;
+		cin.ignore();
+		cout << " Жёсткий диск(тип) : ";
+		gets_s(hard, N);
+		cout << " Жёсткий диск(объём в гигабайтах) : ";
+		cin >> size_hard;
+		cin.ignore();
+		cout << " Видеокарта : ";
+		gets_s(video, N);
+		cout << " Монитор(тип) : ";
+		gets_s(monitor, N);
+		cout << " Монитор(размер экрана в дюймах) : ";
+		cin >> size_mon;
+		if (size_mon == 22)PC::mon_kol++;
+		cin.ignore();
+		cout << " Производитель : ";
+		gets_s(maker, N);
+		cout << " Месяц и год выпуска : ";
+		gets_s(month_year, N);
+		cout << " Гарантийный срок : ";
+		gets_s(garant, N);
+		komp[i].init(CPU, ozu, size_ozu, hard, size_hard, video, monitor, size_mon, maker, month_year, garant);
+	}
+	do
+	{
+		system("cls");
+		cout << " 1 - Список компьютеров с заданным типом процессора \n";
+		cout << " 2 - Список компьютеров с требуемым объёмом оперативной памяти и объёмом жёсткого диска больше или равной заданной\n";
+		cout << " 3 - Подсчитать количество компьютеров с мониторами, размер экрана которых равен 22 \n";
+		cout << " 4 - Показать данные \n";
+		cout << " 5 - Сохранить данные в файл \n";
+		cout << " 6 - Загрузить данные из файла \n";
+		cout << " 7 - выход \n";
+		do
+		{
+			cin >> menu;
+			if (menu < 1 || menu>7)cout << " Ошибка, читайте внимательнее меню \n";
+		} while (menu < 1 || menu>7);
+		switch (menu)
+		{
+		case 1:
+			system("cls");
+			char name_cpu[N];
+			cin.ignore();
+			cout << " Введите искомый тип процессора : ";
+			gets_s(name_cpu, N);
+			for (int i = 0; i < kol; i++)
+			{
+
+				if (strcmp(komp[i].CPU(), name_cpu) == 0)
+					komp[i].show();
+			}
+			system("pause");
+			break;
+		case 2:
+			system("cls");
+			int size1;
+			int size2;
+			cout << " Введите объём оперативной памяти и размер жёсткого диска через пробел : ";
+			cin >> size1 >> size2;
+			for (int i = 0; i < kol; i++)
+			{
+				if ((komp[i].size_ozu() == size1&&komp[i].size_hard() == size2) || (komp[i].size_ozu() == size1&&komp[i].size_hard() > size2))
+					komp[i].show();
+			}
+			system("pause");
+			break;
+		case 3:
+			cout << " Компьютеров с монитором , размер которых равен 22 = " << PC::mon_kol << endl;
+			system("pause");
+			break;
+		case 4:
+			system("cls");
+			for (int i = 0; i < kol; i++)
+			{
+				komp[i].show();
+			}
+			system("pause");
+			break;
+		case 5:
+			FILE* out;
+			char filename[N];
+			cin.ignore();
+			cout << " Введите имя файла : ";
+			gets_s(filename, N);
+			if (fopen_s(&out, filename, "w") != NULL)
+			{
+				cout << " Не удалось открыть файл для записи \n";
+				system("pause");
+				break;
+			}
+			komp->save_file(komp, kol, filename, out);
+			cout << " Успешно выполнено \n";
+			system("pause");
+			break;
+		case 6:
+			break;
+		case 7:
+			cout << " До свидания \n";
+			break;
+		}
+	} while (menu != 7);
+	delete[]komp;
+	system("pause");
+}
+
+
  
