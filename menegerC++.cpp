@@ -126,7 +126,7 @@ bool ShowDir(char path[])
 bool CopyFile(char* source, char* destination)
 {
 	char data[65536];
-	ifstream out(source,ios::binary);
+	ifstream out(source,ios::in|ios::binary);
 	try
 	{
 		if (!out)
@@ -139,7 +139,7 @@ bool CopyFile(char* source, char* destination)
 	}
 	out.read((char*)data, sizeof data);
 	out.close();
-	ofstream in(destination,ios::binary);
+	ofstream in(destination,ios::out|ios::binary);
 	try
 	{
 		if(!in)
@@ -150,7 +150,7 @@ bool CopyFile(char* source, char* destination)
 		cout << str;
 		return false;
 	}
-	in.write((const char*)data, sizeof data);
+	in.write((const char*)data, out.gcount());
 	in.close();
 	return true;
 }
