@@ -125,9 +125,8 @@ bool ShowDir(char path[])
 }
 bool CopyFile(char* source, char* destination)
 {
-	const int size = 65536;
-	char* data = new char[size];
-	ifstream out(source, ios::in | ios::binary);
+	char data[65536];
+	ifstream out(source,ios::binary);
 	if (!out)
 	{
 		cout << " Не удалось открыть файл \n";
@@ -136,7 +135,7 @@ bool CopyFile(char* source, char* destination)
 	}
 	out.read((char*)data, sizeof data);
 	out.close();
-	ofstream in(destination, ios::out | ios::binary);
+	ofstream in(destination,ios::binary);
 	if (!in)
 	{
 		cout << " Не удалось открыть файл \n";
@@ -145,27 +144,24 @@ bool CopyFile(char* source, char* destination)
 	}
 	in.write((const char*)data, sizeof data);
 	in.close();
-	cout << " Данные скопированы успешно \n";
-	system("pause");
 	return true;
 }
-int showFileC(char* path)
+int showFileText(char* path)
 {
-	const int size = 65536;
-	char* data = new char[size];
-	ifstream in(path, ios::in|ios::binary);
+	
+	char data[65536];
+	ifstream in(path, ios::in | ios::binary);
 	if (!in)
 	{
 		cout << " Файла не существует \n";
 		system("pause");
 		return 1;
 	}
-	in.read((char*)data, sizeof (data));
-	in.close();
+	in.read((char*)data, sizeof data);
 	cout << " Содержимое файла \n";
 	cout << data << endl;
 	system("pause");
-	return 0;
+	return 1;
 }
 void RemoveDirectoryWithFile(char* path)
 {
@@ -222,7 +218,7 @@ void main()
 		cout << " 2 - переименование файла\n";
 		cout << " 3 - переименование каталога\n";
 		cout << " 4 - удаление файла\n";
-		cout << " 5 - открыть файл \n";
+		cout << " 5 - показать содержимое текстового файла \n";
 		cout << " 6 - удаление каталога(с файлами)\n";
 		cout << " 7 - копирование файла\n";
 		cout << " 0 - завершить работу \n";
@@ -400,15 +396,16 @@ void main()
 			break;
 		case 5:
 			cin.ignore();
+			ShowDir(path);
 			char way[80];
-			cout << " Введите путь и имя файла : ";
+			cout << " \n Введите путь : ";
 			gets_s(way, 80);
-			showFileC(way);
+			showFileText(way);
 			break;
 		case 6:
 			cin.ignore();
 			ShowDir(path);
-			cout << " \nВведите директорию( например d:\\name\\ ) : ";
+			cout << " \n Введите директорию( например d:\\name\\ ) : ";
 			gets_s(source, size_1);
 			cout << " Удалить папку и вложенные файлы ( 1 - Да / 2 - Нет): ";
 			cin >> key;
@@ -423,7 +420,7 @@ void main()
 		case 7:
 			ShowDir(path);
 			cin.ignore();
-			cout << " \n Введите путь и имя файла : ";
+			cout << " \nВведите путь и имя файла : ";
 			gets_s(source, size_1);
 			cout << " Введите путь и имя файла назначения : ";
 			gets_s(destination, size_1);
@@ -441,7 +438,7 @@ void main()
 			if (!CopyFile(source, destination))
 				cout << " Ошибка копирования \n";
 			else
-				cout << " Ок...\n";
+				cout << " Данные скопированы успешно \n";
 			system("pause");
 			break;
 		case 0:
