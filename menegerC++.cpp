@@ -126,55 +126,44 @@ bool ShowDir(char path[])
 bool CopyFile(char* source, char* destination)
 {
 	const int size = 65536;
-	FILE* src;
-	FILE* dest;
-	//Открытие Файла
-	if (!(src = fopen(source, "rb")))
-		return false;
-	//выделение памяти под буффер
 	char* data = new char[size];
-	if (!data)
-		return false;
-	//Открытие файла, куда будет производиться копирование
-	if (!(dest = fopen(destination, "wb")))
+	ifstream out(source, ios::in | ios::binary);
+	if (!out)
 	{
-		delete[]data;
+		cout << " Не удалось открыть файл \n";
+		system("pause");
 		return false;
 	}
-	int realsize;
-	while (!feof(src))
+	out.read((char*)data, sizeof data);
+	out.close();
+	ofstream in(destination, ios::out | ios::binary);
+	if (!in)
 	{
-		//Чтение данных из файла
-		realsize = fread(data, sizeof(char), size, src);
-		//Запись данных в файл
-		fwrite(data, sizeof(char), realsize, dest);
+		cout << " Не удалось открыть файл \n";
+		system("pause");
+		return false;
 	}
-	//Закрытие файлов
-	fclose(src);
-	fclose(dest);
+	in.write((const char*)data, sizeof data);
+	in.close();
+	cout << " Данные скопированы успешно \n";
+	system("pause");
 	return true;
 }
 int showFileC(char* path)
 {
-	int a;
-	double b;
-	char c[80];
-	ifstream out;
-	
-	out.open(path);
-	if (!out)
+	const int size = 65536;
+	char* data = new char[size];
+	ifstream in(path, ios::in|ios::binary);
+	if (!in)
 	{
-		cout << " Файл не найден \n";
+		cout << " Файла не существует \n";
 		system("pause");
 		return 1;
 	}
-	out >> a;
-	out >> b;
-	out >> c;
-	cout << a << endl;
-	cout << b << endl;
-	cout << c << endl;
-	out.close();
+	in.read((char*)data, sizeof (data));
+	in.close();
+	cout << " Содержимое файла \n";
+	cout << data << endl;
 	system("pause");
 	return 0;
 }
@@ -412,7 +401,7 @@ void main()
 		case 5:
 			cin.ignore();
 			char way[80];
-			cout << " Введите путь : ";
+			cout << " Введите путь и имя файла : ";
 			gets_s(way, 80);
 			showFileC(way);
 			break;
@@ -434,7 +423,7 @@ void main()
 		case 7:
 			ShowDir(path);
 			cin.ignore();
-			cout << " \nВведите путь и имя файла : ";
+			cout << " \n Введите путь и имя файла : ";
 			gets_s(source, size_1);
 			cout << " Введите путь и имя файла назначения : ";
 			gets_s(destination, size_1);
@@ -464,40 +453,4 @@ void main()
 			system("pause");
 		}
 	} while (menu != 0);
-}
-// Использование функций read() и write().
-#include <windows.h>
-#include <iostream>
-#include <fstream>
-
-using namespace std;
-
-int main()
-{
-	system("cls");
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-
-	char str[80];
-	cout << " Введите строку : ";
-	gets_s(str, 80);
-	ofstream out("test.txt", ios::out| ios::binary);
-	if (!out)
-	{
-		cout << "He удается открыть файл для записи.\n";
-		return 1;
-	}
-	out.write((const char*)str, strlen(str));
-	out.close();
-	ifstream in("test.txt", ios::in | ios::binary);
-	if (!in)
-	{
-		cout << "He удается открыть файл для чтения.\n";
-		return 1;
-	}
-	in.read((char*)str, sizeof(str));
-	in.close();
-	cout << " Считаная строка = " << str << endl;
-	cout << "\nДанные успешно записаны в файл и считаны из него.\n";
-	return 0;
 }
