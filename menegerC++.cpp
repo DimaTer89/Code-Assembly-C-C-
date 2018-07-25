@@ -464,3 +464,44 @@ void main()
 		}
 	} while (menu != 0);
 }
+bool CopyFile(char* source, char* destination)
+{
+	const int size = 65536;
+	char data[size];
+	ifstream out(source,ios::in|ios::binary);
+	try
+	{
+		if (!out)
+			throw (char*)" Файл не существует \n";
+	}
+	catch (const char* str)
+	{
+		cout << str;
+		return false;
+	}
+	ofstream in(destination,ios::out|ios::binary);
+	try
+	{
+		if(!in)
+			throw (char*)" Не удалось открыть файл \n";
+	}
+	catch (const char* str)
+	{
+		cout << str;
+		return false;
+	}
+	while (out.eof())
+	{
+		out.read((char*)data, sizeof data);
+		if (out.gcount() < size)
+		{
+			out.read((char*)data, sizeof data);
+			in.write((char*)data, out.gcount());
+			break;
+		}
+		in.write((char*)data, sizeof data);
+	}
+	out.close();
+	in.close();
+	return true;
+}
