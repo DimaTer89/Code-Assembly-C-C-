@@ -101,3 +101,33 @@ int main()
 	paint(num);
 	system("pause");
 }
+#include <windows.h>
+#include <iostream>
+#include <string>
+#include <memory>
+
+using namespace std;
+
+int main(int argc, char* argv[])
+{
+	system("cls");
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	string str;
+	shared_ptr<string> films[5];
+	for (int i = 0; i < 5; i++)
+	{
+		cout << " Введите фильм : ";
+		getline(cin, str);
+		films[i] = shared_ptr<string>(new string(str));
+	}
+	shared_ptr<string> pwin;
+	pwin = films[3];   // films[3] теряет право собственности
+	cout << "Номинант на лучший фильм\n";
+	for (int i = 0; i < 5; i++)
+		cout << *films[i] << endl;
+	cout << "Победитель- " << *pwin << "!\n";
+	system("pause");
+	return 0;
+}
+
