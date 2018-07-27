@@ -5,25 +5,25 @@ using namespace std;
 
 void paint(int n)
 {
-	if (n == 1)
+	if (n == 9)
 	{
 		cout << "   __\n";
 	}
-	if (n == 2)
+	if (n == 8)
 	{
 		cout << "   __\n"
 			<< "  |\n";
 	}
-	if (n == 3)
+	if (n == 7)
 	{
 		cout << "   __\n"
 			<< "  |  |\n";
 	}
-	if (n == 4)
+	if (n == 6)
 	{
 		cout << "   __\n"
 			<< "  |__|\n";
-			
+
 	}
 	if (n == 5)
 	{
@@ -32,21 +32,21 @@ void paint(int n)
 			<< "    |\n"
 			<< "    |\n";
 	}
-	if (n == 6)
+	if (n == 4)
 	{
 		cout << "   ___\n"
 			<< "  |___|\n"
 			<< "   /|\n"
 			<< "    |\n";
 	}
-	if (n == 7)
+	if (n == 3)
 	{
 		cout << "   ___\n"
 			<< "  |___|\n"
 			<< "   /|\\\n"
 			<< "    |\n";
 	}
-	if (n == 8)
+	if (n == 2)
 	{
 		cout << "   ___\n"
 			<< "  |___|\n"
@@ -54,7 +54,7 @@ void paint(int n)
 			<< "    |\n"
 			<< "   /\n ";
 	}
-	if (n == 9)
+	if (n == 1)
 	{
 		cout << "  ___\n"
 			<< "  |___|\n"
@@ -62,9 +62,9 @@ void paint(int n)
 			<< "    |\n"
 			<< "   / \\\n ";
 	}
-	if (n == 10)
+	if (n == 0)
 	{
-		cout<< "   |\n"
+		cout << "   |\n"
 			<< "   _|_\n"
 			<< "  |___|\n"
 			<< "   /|\\\n"
@@ -76,28 +76,28 @@ int main()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	int num = 0;
+	int num = 10;
 	cout << endl << endl;
-	num = 1;
+	num--;
 	paint(num);
 	cout << endl << endl;
-	num = 2;
+	num--;
 	paint(num);
-	num = 3;
+	num--;
 	paint(num);
-	num = 4;
+	num--;
 	paint(num);
-	num = 5;
+	num--;
 	paint(num);
-	num = 6;
+	num--;
 	paint(num);
-	num = 7;
+	num--;
 	paint(num);
-	num = 8;
+	num--;
 	paint(num);
-	num = 9;
+	num--;
 	paint(num);
-	num = 10;
+	num--;
 	paint(num);
 	system("pause");
 }
