@@ -12,13 +12,79 @@ struct stek
 	int prior;
 	stek* next;
 };
+struct stekInt
+{
+	int elem;
+	stekInt* next;
+};
+class StekInt
+{
+	stekInt* head;
+public:
+	StekInt()
+	{
+		head = NULL;
+	}
+	~StekInt()
+	{
+		deleteStekInt();
+	}
+	void pop(int n);
+	int push();
+	void deleteStekInt();
+	void show();
+};
+void StekInt::pop(int n)
+{
+	stekInt* tmp = new stekInt;
+	tmp->elem = n;
+	tmp->next = head;
+	head = tmp;
+}
+int StekInt::push()
+{
+	if (!head)return 99999;
+	int data = head->elem;
+	stekInt* tmp = head;
+	head = head->next;
+	delete tmp;
+	return data;
+}
+void StekInt::deleteStekInt()
+{
+	stekInt* tmp = NULL;
+	while (head)
+	{
+		tmp = head->next;
+		delete head;
+		head = tmp;
+	}
+	delete tmp;
+}
+void StekInt::show()
+{
+	stekInt* tmp = head;
+	cout << " Стек : \n";
+	while (tmp)
+	{
+		cout << tmp->elem << " ";
+		tmp = tmp->next;
+	}
+	cout << endl;
+	delete tmp;
+}
 class Stek
 {
+protected:
 	stek* head;
 public:
 	Stek()
 	{
 		head = NULL;
+	}
+	~Stek()
+	{
+		deleteStek();
 	}
 	bool empty();
 	void pop(char s);
@@ -52,7 +118,6 @@ void Stek::brackets(string& str)
 }
 void Stek::stekOb(string& str,int prior)
 {
-	cout << prior << endl;
 	stek* tmp = NULL;
 	while (head&&head->prior >= prior)
 	{
@@ -119,19 +184,63 @@ class reversePolishEntry
 {
 	string stroka;
 	Stek st;
+	string str;
 public:
 	reversePolishEntry(string stroka) :stroka(stroka) {};
 	void show() { cout << stroka << endl; }
 	void analys();
+	string& getStr() { return str; }
+	int CalcInt(string str);
+	int sum(int a, int b, char s);
 };
+int reversePolishEntry::sum(int a, int b, char s)
+{
+	switch (s)
+	{
+	case '*':
+		return a * b;
+	case '/':
+		return a / b;
+	case '+':
+		return a + b;
+	case '-':
+		return a - b;
+	default:
+		cout << " Error !!!\n";
+		return -500;
+	}
+}
+int reversePolishEntry::CalcInt(string str)
+{
+	int len = str.length();
+	StekInt st;
+	int num = 0;
+	for (int i = 0; i < len; i++)
+	{
+		if (str.at(i) == '*' || str.at(i) == '/' || str.at(i) == '+' || str.at(i) == '-')
+		{
+			int n2;
+			int n1;
+			n2 = st.push();
+			n1 = st.push();
+			st.pop(sum(n1,n2,str.at(i)));
+			continue;
+		}
+		else
+		{
+			num = str.at(i) - '0';
+			st.pop(num);
+		}
+	}
+	return st.push();
+}
 void reversePolishEntry::analys()
 {
-	string str;
 	int prior = 0;
 	int len = stroka.length();
     for (int i = 0; i < len; i++)
 	{
-		if (stroka.at(i) >= 'a'&&stroka.at(i) <= 'z')
+		if ((stroka.at(i) >= 'a'&&stroka.at(i) <= 'z')||stroka.at(i)>='0'&&stroka.at(i)<='9')
 			str += stroka.at(i);
 		if (stroka.at(i) == '*'||stroka.at(i)=='/') 
 		{
@@ -161,7 +270,7 @@ void reversePolishEntry::analys()
 		}
 		delete tmp;
 	}
-	cout << str << endl;
+	st.deleteStek();
 }
 int main()
 {
@@ -174,5 +283,8 @@ int main()
 	reversePolishEntry ob(polish);
 	ob.show();
 	ob.analys();
+	string str = ob.getStr();
+	cout << str << endl;
+	cout << " Результат : " << ob.CalcInt(str) << endl;
 	system("pause");
 }
