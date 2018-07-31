@@ -462,14 +462,34 @@ char Stek::push()
 void Stek::deleteStek()
 {
 	stek* tmp = NULL;
-	while (head)
+	try
 	{
-		tmp = head->next;
-		delete head;
-		head = tmp;
+		if (head == NULL)
+			throw (char*)"NULL\n";
+		else
+		{
+			cout << head->elem << endl;
+			system("pause");
+			while (head)
+			{
+				tmp = head->next;
+				delete head;
+				head = tmp;
+			}
+			delete tmp;
+			head = NULL;
+			return;
+		}
+
 	}
-	delete tmp;
-	head = NULL;
+	catch (const char* s)
+	{
+		cout << s;
+		delete tmp;
+		head = NULL;
+		return;
+	}
+	
 }
 bool Stek::empty()
 {
