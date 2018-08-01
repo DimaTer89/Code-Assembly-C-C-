@@ -94,7 +94,12 @@ public:
 	stek* getHead();
 	void stekOb(string& str, int prior);
 	void brackets(string& str);
+	char putElem();
 };
+char Stek::putElem()
+{
+	return head->elem;
+}
 stek* Stek::getHead()
 {
 	return head;
@@ -243,11 +248,34 @@ public:
 	{
 		st.deleteStek();
 	}
+	bool analysString(string str);
 	void analys();
 	string& getStr() { return str; }
 	int CalcInt(string str);
 	int sum(int a, int b, char s);
 };
+bool reversePolishEntry::analysString(string str)
+{
+	Stek tmp;
+	int len = str.length();
+	for (int i = 0; i < len; i++)
+	{
+		if (str.at(i) == '(')
+			tmp.pop(str.at(i));
+		if (str.at(i) == ')')
+		{
+			if (tmp.putElem() == '(')
+			{
+				tmp.push();
+				continue;
+			}
+		}
+	}
+	if (tmp.getHead())
+		return false;
+	else
+		return true;
+}
 int reversePolishEntry::sum(int a, int b, char s)
 {
 	switch (s)
@@ -340,6 +368,13 @@ int main()
 	cout << " Введите строку : ";
 	getline(cin, polish);
 	reversePolishEntry ob(polish);
+	if (ob.analysString(polish))
+		cout << " Строка верна \n";
+	else
+	{
+		cout << " Строка составлена не верно \n";
+		exit(0);
+	}
 	ob.analys();
 	string str = ob.getStr();
 	cout << " Обратная польская запись : " <<str << endl;
