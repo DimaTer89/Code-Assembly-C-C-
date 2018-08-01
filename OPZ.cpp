@@ -359,15 +359,32 @@ void reversePolishEntry::analys()
 		st.deleteStek();
 	}
 }
+char* strg(string str)
+{
+	char* string;
+	int len = str.length();
+	string = new char[len];
+	int i;
+	for (i = 0; i < len; i++)
+	{
+		string[i] = str.at(i);
+	}
+	string[i++] = 0;
+	return string;
+}
 int main()
 {
 	system("cls");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	string polish;
+	char buff[30];
+	char* word, *next;
 	cout << " Введите строку : ";
 	getline(cin, polish);
-	reversePolishEntry ob(polish);
+
+	strcpy(buff,strg(polish));
+	/*reversePolishEntry ob(polish);
 	if (ob.analysString(polish))
 		cout << " Строка верна \n";
 	else
@@ -378,6 +395,13 @@ int main()
 	ob.analys();
 	string str = ob.getStr();
 	cout << " Обратная польская запись : " <<str << endl;
-	cout << " Результат : " << ob.CalcInt(str) << endl;
+	cout << " Результат : " << ob.CalcInt(str) << endl;*/
+	cout << buff << endl;
+	word=strtok_s(buff, " ",&next);
+	while (word)
+	{
+		cout << word << endl;
+		word = strtok_s(NULL, " ", &next);
+	}
 	system("pause");
 }
