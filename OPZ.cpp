@@ -116,16 +116,32 @@ void Stek::brackets(string& str)
 			head = tmp;
 		}
 	}
+	tmp = NULL;
+	delete tmp;
 }
 void Stek::stekOb(string& str, int prior)
 {
 	stek* tmp = NULL;
-	while (head&&head->prior >= prior)
+	while (head)
 	{
-		tmp = head->next;
-		str += push();
-		head = tmp;
+		if (head->prior >= prior)
+		{
+			if (!head->next)
+			{
+				head = tmp = NULL;
+				str += push();
+			}
+			else
+			{
+				tmp = head->next;
+				str += push();
+				head = tmp;
+			}
+		}
+		else
+			break;
 	}
+	tmp = NULL;
 	delete tmp;
 }
 void Stek::show()
@@ -155,12 +171,23 @@ void Stek::pop(char s)
 }
 char Stek::push()
 {
-	if (!head)return '~';
-	char data = head->elem;
+	if (!head)return 'f';
 	stek* tmp = head;
-	head = head->next;
-	delete tmp;
-	return data;
+	char data = head->elem;
+	if (!head->next)
+	{
+		head = NULL;
+		tmp = NULL;
+		delete tmp;
+		return data;
+	}
+	else
+	{
+		head = head->next;
+		tmp = NULL;
+		delete tmp;
+		return data;
+	}
 }
 void Stek::deleteStek()
 {
@@ -177,8 +204,6 @@ void Stek::deleteStek()
 			}
 			else
 			{
-				cout << head->elem << endl;
-				system("pause");
 				while (head)
 				{
 					tmp = head->next;
@@ -270,7 +295,7 @@ void reversePolishEntry::analys()
 	int len = stroka.length();
 	for (int i = 0; i < len; i++)
 	{
-		if ((stroka.at(i) >= 'a'&&stroka.at(i) <= 'z')|| (stroka.at(i) >= '0'&&stroka.at(i) <= '9'))
+		if ((stroka.at(i) >= 'a'&&stroka.at(i) <= 'z')||(stroka.at(i) >= '0'&&stroka.at(i) <= '9'))
 			str += stroka.at(i);
 		if (stroka.at(i) == '*' || stroka.at(i) == '/')
 		{
@@ -303,6 +328,7 @@ void reversePolishEntry::analys()
 			tmp = tmp->next;
 		}
 		delete tmp;
+		st.deleteStek();
 	}
 }
 int main()
