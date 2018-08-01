@@ -405,3 +405,60 @@ int main()
 	}
 	system("pause");
 }
+#include <iostream>
+#include <Windows.h>
+#include <string>
+using namespace std;
+
+char* strg(string str)
+{
+	char* string;
+	int len = str.length();
+	string = new char[len];
+	int i;
+	for (i = 0; i < len; i++)
+	{
+		string[i] = str.at(i);
+	}
+	string[i] = 0;
+	return string;
+}
+string& changeStr(string& str)
+{
+	int len = str.length();
+	for (int i = 0; i < len; i++)
+	{
+		if (str.at(i) == '/' || str.at(i) == '*' || str.at(i) == '+' || str.at(i) == '-')
+			str.at(i) = ' ';
+	}
+	return str;
+}
+int main()
+{
+	system("cls");
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	string polish;
+	string name;
+	char buff[30];
+	char* nam = "21";
+	cout << nam << endl;
+	int num = atoi(nam);
+	cout << num << endl;
+	char* word, *next;
+	cout << " Введите строку : ";
+	getline(cin, polish);
+	polish = changeStr(polish);
+	cout << polish << endl;
+	system("pause");
+	strcpy(buff,strg(polish));
+	cout << buff << endl;
+	word = strtok_s(buff, " ", &next);
+	int i = 0;
+	while (word)
+	{
+		word = strtok_s(NULL, " ", &next);
+		i++;
+	}
+	system("pause");
+}
