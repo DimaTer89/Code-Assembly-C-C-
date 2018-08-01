@@ -369,8 +369,19 @@ char* strg(string str)
 	{
 		string[i] = str.at(i);
 	}
-	string[i++] = 0;
+	string[i] = 0;
 	return string;
+}
+string& changeStr(string& str)
+{
+	int len = str.length();
+	for (int i = 0; i < len; i++)
+	{
+		if (str.at(i) == '/' || str.at(i) == '*' || str.at(i) == '+' || str.at(i) == '-'||str.at(i)=='('||str.at(i)==')')
+			str.at(i) = ' ';
+		
+	}
+	return str;
 }
 int main()
 {
@@ -378,14 +389,23 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	string polish;
+	string name;
 	char buff[30];
 	char* word, *next;
 	cout << " Введите строку : ";
 	getline(cin, polish);
-
+	name = polish;
+	polish = changeStr(polish);
 	strcpy(buff,strg(polish));
-	/*reversePolishEntry ob(polish);
-	if (ob.analysString(polish))
+	cout << buff << endl;
+	word = strtok_s(buff, " ", &next);
+	while (word)
+	{
+		cout << word << endl;
+		word = strtok_s(NULL, " ", &next);
+	}
+	reversePolishEntry ob(name);
+	if (ob.analysString(name))
 		cout << " Строка верна \n";
 	else
 	{
@@ -395,15 +415,10 @@ int main()
 	ob.analys();
 	string str = ob.getStr();
 	cout << " Обратная польская запись : " <<str << endl;
-	cout << " Результат : " << ob.CalcInt(str) << endl;*/
-	cout << buff << endl;
-	word=strtok_s(buff, " ",&next);
-	while (word)
-	{
-		cout << word << endl;
-		word = strtok_s(NULL, " ", &next);
-	}
+	cout << " Результат : " << ob.CalcInt(str) << endl;
 	system("pause");
+}
+
 }
 #include <iostream>
 #include <Windows.h>
