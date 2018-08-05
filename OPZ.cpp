@@ -6,6 +6,92 @@
 #include <string>
 
 using namespace std;
+struct tree
+{
+	char sim;
+	int value;
+	tree* left;
+	tree* right;
+};
+class Tree
+{
+	tree* root;
+public:
+	Tree()
+	{
+		root = NULL;
+	};
+	~Tree()
+	{
+		deleteTree(root);
+	}
+	void pushTree(char s, int num,tree*& root);
+	void showTree(tree* root);
+	void deleteTree(tree*& root);
+	int search(char s, tree* root);
+	tree*& getRoot();
+};
+int Tree::search(char s, tree* root)
+{
+	if (root->sim==s)
+	{
+		return root->value;
+	}
+	if (root->sim>s)
+	{
+		if (root->left == NULL)
+			cout << " Elements not found \n";
+		else
+			search(s,root->left);
+	}
+	if (root->sim<s)
+	{
+		if (root->right == NULL)
+			cout << " Elements not found \n";
+		else
+			search(s,root->right);
+	}
+}
+tree*& Tree::getRoot()
+{
+	return root;
+}
+void Tree::pushTree(char s, int num,tree*& root)
+{
+	if (root == NULL)
+	{
+		root = new tree;
+		root->sim = s;
+		root->value = num;
+		root->left = root->right = NULL;
+	}
+	else
+	{
+		if (root->sim > s)
+			pushTree(s, num, root->left);
+		if (root->sim < s)
+			pushTree(s, num, root->right);
+	}
+}
+void Tree::showTree(tree* root)
+{
+	if (root != NULL)
+	{
+		showTree(root->left);
+		cout << root->sim << " " << root->value << endl;
+		showTree(root->right);
+	}
+}
+void Tree::deleteTree(tree*& root)
+{
+	if (!root)
+	{
+		deleteTree(root->left);
+		deleteTree(root->right);
+		delete root;
+		root = NULL;
+	}
+}
 struct stek
 {
 	char elem;
@@ -76,7 +162,7 @@ void StekInt::show()
 class Stek
 {
 protected:
-	stek* head;
+	stek * head;
 public:
 	Stek()
 	{
@@ -131,17 +217,9 @@ void Stek::stekOb(string& str, int prior)
 	{
 		if (head->prior >= prior)
 		{
-			if (!head->next)
-			{
-				head = tmp = NULL;
-				str += push();
-			}
-			else
-			{
-				tmp = head->next;
-				str += push();
-				head = tmp;
-			}
+			tmp = head->next;
+			str += push();
+			head = tmp;
 		}
 		else
 			break;
@@ -241,7 +319,7 @@ class reversePolishEntry
 {
 	string stroka;
 	Stek st;
-	string str;
+	string strn;
 public:
 	reversePolishEntry(string stroka) :stroka(stroka) {};
 	~reversePolishEntry()
@@ -249,9 +327,9 @@ public:
 		st.deleteStek();
 	}
 	bool analysString(string str);
-	void analys();
-	string& getStr() { return str; }
-	int CalcInt(string str);
+	void analys(string& str);
+	string& getStr() { return strn; }
+	int CalcInt(string str, Tree ob);
 	int sum(int a, int b, char s);
 };
 bool reversePolishEntry::analysString(string str)
@@ -283,7 +361,14 @@ int reversePolishEntry::sum(int a, int b, char s)
 	case '*':
 		return a * b;
 	case '/':
-		return a / b;
+		if (b == 0)
+		{
+			cout << " На ноль делить нельзя \n";
+			system("pause");
+			exit(0);
+		}
+		else
+			return a / b;
 	case '+':
 		return a + b;
 	case '-':
@@ -293,7 +378,7 @@ int reversePolishEntry::sum(int a, int b, char s)
 		return -500;
 	}
 }
-int reversePolishEntry::CalcInt(string str)
+int reversePolishEntry::CalcInt(string str,Tree ob)
 {
 	int len = str.length();
 	StekInt st;
@@ -306,44 +391,46 @@ int reversePolishEntry::CalcInt(string str)
 			int n1;
 			n2 = st.push();
 			n1 = st.push();
-			st.pop(sum(n1, n2, str.at(i)));
+			st.pop(sum(n1,n2, str.at(i)));
 			continue;
 		}
 		else
 		{
-			num = str.at(i) - '0';
-			st.pop(num);
+			st.pop(ob.search(str.at(i), ob.getRoot()));
 		}
 	}
 	return st.push();
 }
-void reversePolishEntry::analys()
+void reversePolishEntry::analys(string& str)
 {
 	int prior = 0;
-	int len = stroka.length();
+	string temp;
+	int len = str.length();
 	for (int i = 0; i < len; i++)
 	{
-		if ((stroka.at(i) >= 'a'&&stroka.at(i) <= 'z')||(stroka.at(i) >= '0'&&stroka.at(i) <= '9'))
-			str += stroka.at(i);
-		if (stroka.at(i) == '*' || stroka.at(i) == '/')
+		if (str.at(i) >= 'a')
+		{
+			temp += str.at(i);
+		}
+		if (str.at(i) == '*' || str.at(i) == '/')
 		{
 			int prior = 3;
-			st.stekOb(str, prior);
-			st.pop(stroka.at(i));
+			st.stekOb(temp, prior);
+			st.pop(str.at(i));
 		}
-		if (stroka.at(i) == '+' || stroka.at(i) == '-')
+		if (str.at(i) == '+' || str.at(i) == '-')
 		{
 			int prior = 2;
-			st.stekOb(str, prior);
-			st.pop(stroka.at(i));
+			st.stekOb(temp, prior);
+			st.pop(str.at(i));
 		}
-		if (stroka.at(i) == '(')
+		if (str.at(i) == '(')
 		{
-			st.pop(stroka.at(i));
+			st.pop(str.at(i));
 		}
-		if (stroka.at(i) == ')')
+		if (str.at(i) == ')')
 		{
-			st.brackets(str);
+			st.brackets(temp);
 		}
 	}
 	if (st.empty())
@@ -352,12 +439,13 @@ void reversePolishEntry::analys()
 		while (tmp)
 		{
 
-			str += tmp->elem;
+			temp += tmp->elem;
 			tmp = tmp->next;
 		}
 		delete tmp;
 		st.deleteStek();
 	}
+	strn = temp;
 }
 char* strg(string str)
 {
@@ -377,17 +465,71 @@ string& changeStr(string& str)
 	int len = str.length();
 	for (int i = 0; i < len; i++)
 	{
-		if (str.at(i) == '/' || str.at(i) == '*' || str.at(i) == '+' || str.at(i) == '-'||str.at(i)=='('||str.at(i)==')')
+		if (str.at(i) == '/' || str.at(i) == '*' || str.at(i) == '+' || str.at(i) == '-' || str.at(i) == '(' || str.at(i) == ')')
 			str.at(i) = ' ';
-		
+			
+
 	}
 	return str;
+}
+string& changeStr1(string& str)
+{
+	
+	return str;
+}
+void udal(string& str)
+{
+	int i;
+	char name[30];
+	string reduxName;
+	int strLen = str.length();
+	for (i=0;i < strLen; i++)
+	{
+		name[i] = str.at(i);
+	}
+	name[i] = 0;
+	int len = strlen(name);
+	for (int i = 0; i < len; i++)
+	{
+		if (name[i] >= '0'&&name[i] <= '9')
+			name[i] = '!';
+	}
+	for (int i = 0; i<len; i++)
+	{
+		if (name[i] == name[i + 1])
+		{
+			for (int j = i; j<len; j++)
+			{
+				name[j] = name[j + 1];
+			}
+			len--;
+		}
+	}
+	for (int i = 0; i < len; i++)
+	{
+		reduxName += name[i];
+	}
+	int j = 0;
+	int sLen = reduxName.length();
+	for (int i = 0; i < sLen; i++)
+	{
+		if (reduxName.at(i) == '!')
+		{
+			reduxName.at(i) = 'a' + j;
+			j++;
+		}
+	}
+	cout << " "<<reduxName << endl;
+	str=reduxName;
 }
 int main()
 {
 	system("cls");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
+	Tree ob1;
+	int len = 0;
+	int i = 0;
 	string polish;
 	string name;
 	char buff[30];
@@ -396,84 +538,31 @@ int main()
 	getline(cin, polish);
 	name = polish;
 	polish = changeStr(polish);
-	strcpy(buff,strg(polish));
-	cout << buff << endl;
+	strcpy(buff, strg(polish));
 	word = strtok_s(buff, " ", &next);
 	while (word)
 	{
-		cout << word << endl;
+		ob1.pushTree('a' + i, atoi(word), ob1.getRoot());
+		i++;
 		word = strtok_s(NULL, " ", &next);
 	}
 	reversePolishEntry ob(name);
 	if (ob.analysString(name))
-		cout << " Строка верна \n";
+	{
+
+	}
 	else
 	{
 		cout << " Строка составлена не верно \n";
 		exit(0);
 	}
-	ob.analys();
+	udal(name);
+	ob.analys(name);
 	string str = ob.getStr();
-	cout << " Обратная польская запись : " <<str << endl;
-	cout << " Результат : " << ob.CalcInt(str) << endl;
-	system("pause");
-}
-
-}
-#include <iostream>
-#include <Windows.h>
-#include <string>
-using namespace std;
-
-char* strg(string str)
-{
-	char* string;
-	int len = str.length();
-	string = new char[len];
-	int i;
-	for (i = 0; i < len; i++)
-	{
-		string[i] = str.at(i);
-	}
-	string[i] = 0;
-	return string;
-}
-string& changeStr(string& str)
-{
-	int len = str.length();
-	for (int i = 0; i < len; i++)
-	{
-		if (str.at(i) == '/' || str.at(i) == '*' || str.at(i) == '+' || str.at(i) == '-')
-			str.at(i) = ' ';
-	}
-	return str;
-}
-int main()
-{
-	system("cls");
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	string polish;
-	string name;
-	char buff[30];
-	char* nam = "21";
-	cout << nam << endl;
-	int num = atoi(nam);
-	cout << num << endl;
-	char* word, *next;
-	cout << " Введите строку : ";
-	getline(cin, polish);
-	polish = changeStr(polish);
-	cout << polish << endl;
-	system("pause");
-	strcpy(buff,strg(polish));
-	cout << buff << endl;
-	word = strtok_s(buff, " ", &next);
-	int i = 0;
-	while (word)
-	{
-		word = strtok_s(NULL, " ", &next);
-		i++;
-	}
+	cout << " Обратная польская запись : " << str << endl;
+	cout << " Результат : " << ob.CalcInt(str,ob1) << endl;
+	word = next = NULL;
+	delete word;
+	delete next;
 	system("pause");
 }
