@@ -367,6 +367,43 @@ string& changeStr(string& str)
 	}
 	return str;
 }
+void un_min(string& str,map<char,double>& ob)
+{
+	map<char,double>::iterator iter;
+	char* str_c = (char*)str.c_str();
+	int len = strlen(str_c);
+	for (int i = 0; i < len;i++)
+	{
+		if (str_c[i] == '-')
+		{
+			if (str_c[i - 1] == '+' || str_c[i - 1] == '/' || str_c[i - 1] == '-' || str_c[i - 1] == '*'||str_c[i-1]=='('||!str_c[i-1])
+			{
+				for (int j = i; j < len; j++)
+				{
+					if (str_c[j] >= 'a'&&str_c[j] <= 'z')
+					{
+						iter = ob.find(str_c[j]);
+						iter->second *= -1;
+						break;
+					}
+				}
+				for (int j = i; j < len; j++)
+				{
+					str_c[j] = str_c[j + 1];
+				}
+				len--;
+			}
+		}
+	}
+	string tmp;
+	for (int i = 0; i < len; i++)
+	{
+		tmp += str_c[i];
+	}
+	str = tmp;
+	str_c = NULL;
+	delete str_c;
+}
 void udal(string& str)
 {
 	int len = str.size();
@@ -443,6 +480,10 @@ int main()
 		if (ob.analysString(str_ex))
 		{
 			udal(str_ex);
+			map<char, double>::iterator iter;
+			iter = d_map.begin();
+			un_min(str_ex, d_map);
+			iter = d_map.begin();
 			ob.analys(str_ex);
 			cout << " Результат : " << ob.Calc(ob.getStr(), d_map) << endl;
 			d_map.clear();
