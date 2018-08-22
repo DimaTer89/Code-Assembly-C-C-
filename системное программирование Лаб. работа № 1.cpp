@@ -1,15 +1,14 @@
-/*Поток main должен выполнить следующие действия: 
-1. Создать массив целых чисел, размер и элементы которого вводятся с  
-    консоли. 
-2. Создать поток worker. 
-3. Найти минимальный и максимальный элементы массива и вывести их на консоль.  
-   После каждого сравнения элементов «спать» 7 миллисекунд. 
-4. Дождаться завершения потока worker. 
-5. Подсчитать количество элементов в массиве, значение которых больше среднего  
-   значения элементов массива, и вывести его на консоль. 
-6. Завершить работу. 
-10. Поток worker должен найти значение суммы нечётных элементов массива и
-минимального элемента.*/
+/*Поток main должен выполнить следующие действия:
+1. Создать массив целых чисел, размер и элементы которого вводятся с
+консоли.
+2. Создать поток worker.
+(Поток worker должен найти значение суммы нечётных элементов массива и минимального элемента.)
+3. Найти минимальный и максимальный элементы массива и вывести их на консоль.
+После каждого сравнения элементов «спать» 7 миллисекунд.
+4. Дождаться завершения потока worker.
+5. Подсчитать количество элементов в массиве, значение которых больше среднего
+значения элементов массива, и вывести его на консоль.
+6. Завершить работу.*/
 #include <Windows.h>
 #include <iostream>
 volatile int size_1;
@@ -18,12 +17,11 @@ using namespace std;
 
 DWORD WINAPI worker(LPVOID *arr)
 {
-	Sleep(12);
 	int sum = 0;
 	for (int i = 0; i < size_1; i++)
 	{
 		Sleep(12);
-		if ((int)arr[i] % 2!=0&&(int)arr[i] != min_1)
+		if ((int)arr[i] % 2 != 0 && (int)arr[i] != min_1)
 			sum += (int)arr[i];
 	}
 	sum += min_1;
@@ -35,13 +33,11 @@ int min_elem(int* arr)
 	min_1 = arr[0];
 	for (int i = 0; i < size_1; i++)
 	{
-		Sleep(7);
 		if (min_1 >(int)arr[i])
 		{
-			Sleep(7);
 			min_1 = (int)arr[i];
-
 		}
+		Sleep(7);
 	}
 	return min_1;
 }
@@ -50,13 +46,11 @@ int max_elem(int* arr)
 	int max = arr[0];
 	for (int i = 0; i < size_1; i++)
 	{
-		Sleep(7);
 		if (max <(int)arr[i])
 		{
-			Sleep(7);
 			max = arr[i];
-
 		}
+		Sleep(7);
 	}
 	return max;
 }
@@ -70,7 +64,7 @@ double med_elem(int* arr)
 	}
 	return (double)sum / size_1;
 }
-int Count(double elem,int* arr)
+int Count(double elem, int* arr)
 {
 	int count = 0;
 	for (int i = 0; i < size_1; i++)
@@ -107,7 +101,7 @@ int main(void)
 	}
 	cout << endl;
 	hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)worker, (LPVOID*)arr, 0, &IdThread);
-	if(hThread==NULL)
+	if (hThread == NULL)
 		return GetLastError();
 	cout << " Минимальный элемент в массиве = " << min_elem(arr) << endl;
 	cout << " Максимальный элемент в массиве = " << max_elem(arr) << endl;
