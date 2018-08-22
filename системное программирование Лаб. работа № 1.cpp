@@ -100,7 +100,7 @@ int main(void)
 		cin >> arr[i];
 	}
 	system("cls");
-	cout << " Вывод массива \n";
+	cout << " Вывод массива : ";
 	for (int i = 0; i < size_1; i++)
 	{
 		cout << arr[i] << " ";
@@ -113,9 +113,8 @@ int main(void)
 	cout << " Максимальный элемент в массиве = " << max_elem(arr) << endl;
 	WaitForSingleObject(hThread, INFINITE);
 	CloseHandle(hThread);
-	
-	cout << " Среднее значение = " << med_elem(arr) << endl;
-	cout << " Количество элементов = " << Count(med_elem(arr), arr) << endl;
+	cout << " Среднее значение массива = " << med_elem(arr) << endl;
+	cout << " Количество элементов больших среднего значения = " << Count(med_elem(arr), arr) << endl;
 	system("pause");
 	return 0;
 }
