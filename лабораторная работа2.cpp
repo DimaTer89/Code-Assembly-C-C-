@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
-#include <list>
+#include <fstream>
 
 
 using namespace std;
@@ -42,12 +42,13 @@ void Parent::addList()
 	double grade_1;
 	cout << " Введите номер зачётки : ";
 	cin >> num_1;
+	cin.ignore();
 	cout << " Введите фамилию студента : ";
-	cin >> fam_1;
+	gets_s(fam_1,30);
 	cout << " Введите имя студента : ";
-	cin >> first_name_1;
+	gets_s(first_name_1,30);
 	cout << " Введите отчество студента : ";
-	cin >> second_name_1;
+	gets_s(second_name_1,30);
 	cout << " Введите средний балл : ";
 	cin >> grade_1;
 	emp* elem = new emp;
@@ -98,17 +99,20 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	Parent ob;
-	char key = 'y';
-	while (key == 'y')
+	char key = 'д';
+	while (key == 'д')
 	{
 		ob.addList();
 		cout << " Добавить студента : y/n ";
 		cin >> key;
-		if (key != 'y')
+		if (key != 'н')
 			break;
 	}
 	cout << " Список студентов \n";
 	ob.showList();
+	ofstream ofs("text.txt", std::ios::binary);
+	ofs.write((char*)ob, sizeof(ob));
+	ofs.close();
 	system("pause");
 	return 0;
 }
