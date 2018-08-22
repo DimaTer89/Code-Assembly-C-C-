@@ -20,12 +20,13 @@ DWORD WINAPI worker(LPVOID *arr)
 {
 	Sleep(12);
 	int sum = 0;
-	sum += min_1;
 	for (int i = 0; i < size_1; i++)
 	{
-		if ((int)arr[i] % 2!=0)
+		Sleep(12);
+		if ((int)arr[i] % 2!=0&&(int)arr[i] != min_1)
 			sum += (int)arr[i];
 	}
+	sum += min_1;
 	cout << " Cуммы нечётных элементов массива и минимального элемента =  " << sum << endl;
 	return 0;
 }
@@ -34,6 +35,7 @@ int min_elem(int* arr)
 	min_1 = arr[0];
 	for (int i = 0; i < size_1; i++)
 	{
+		Sleep(7);
 		if (min_1 >(int)arr[i])
 		{
 			Sleep(7);
@@ -48,6 +50,7 @@ int max_elem(int* arr)
 	int max = arr[0];
 	for (int i = 0; i < size_1; i++)
 	{
+		Sleep(7);
 		if (max <(int)arr[i])
 		{
 			Sleep(7);
@@ -106,10 +109,11 @@ int main(void)
 	hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)worker, (LPVOID*)arr, 0, &IdThread);
 	if(hThread==NULL)
 		return GetLastError();
-	WaitForSingleObject(hThread, INFINITE);
-	CloseHandle(hThread);
 	cout << " Минимальный элемент в массиве = " << min_elem(arr) << endl;
 	cout << " Максимальный элемент в массиве = " << max_elem(arr) << endl;
+	WaitForSingleObject(hThread, INFINITE);
+	CloseHandle(hThread);
+	
 	cout << " Среднее значение = " << med_elem(arr) << endl;
 	cout << " Количество элементов = " << Count(med_elem(arr), arr) << endl;
 	system("pause");
