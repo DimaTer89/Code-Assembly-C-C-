@@ -1,7 +1,5 @@
 #include <iostream>
 #include <windows.h>
-#include <io.h>
-#include <fcntl.h>
 #include <fstream>
 
 
@@ -44,11 +42,11 @@ void Parent::addList()
 	cin >> num_1;
 	cin.ignore();
 	cout << " Введите фамилию студента : ";
-	gets_s(fam_1,30);
+	gets_s(fam_1, 30);
 	cout << " Введите имя студента : ";
-	gets_s(first_name_1,30);
+	gets_s(first_name_1, 30);
 	cout << " Введите отчество студента : ";
-	gets_s(second_name_1,30);
+	gets_s(second_name_1, 30);
 	cout << " Введите средний балл : ";
 	cin >> grade_1;
 	emp* elem = new emp;
@@ -77,6 +75,7 @@ void Parent::deleteList()
 		head = tmp;
 	}
 	tmp = NULL;
+	head = NULL;
 	delete tmp;
 }
 void Parent::showList()
@@ -88,9 +87,8 @@ void Parent::showList()
 		cout << " Имя студента : " << head->first_name << endl;
 		cout << " Отчество студента : " << head->second_name << endl;
 		cout << " Средний балл : " << head->grade << endl;
-		head=head->next;
+		head = head->next;
 	}
-	cout << endl;
 }
 
 int main()
@@ -103,16 +101,19 @@ int main()
 	while (key == 'д')
 	{
 		ob.addList();
-		cout << " Добавить студента : y/n ";
+		cout << " Добавить студента : д/н ";
 		cin >> key;
-		if (key != 'н')
+		if (key == 'н')
 			break;
 	}
-	cout << " Список студентов \n";
-	ob.showList();
-	ofstream ofs("text.txt", std::ios::binary);
-	ofs.write((char*)ob, sizeof(ob));
-	ofs.close();
+	ofstream write_file("D:\\C+\\Parent\\Release\\test.dat",ios::binary);
+	if (!write_file)
+	{
+		cout << " Не удается открыть файл \n";
+		return 1;
+	}
+	write_file.write(reinterpret_cast<const char*>(&ob), sizeof ob);
+	write_file.close();
 	system("pause");
 	return 0;
 }
