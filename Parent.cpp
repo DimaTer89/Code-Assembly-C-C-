@@ -60,7 +60,7 @@ int main()
 	return 0;
 }
 ===================================================
-	#include <iostream>
+#include <iostream>
 #include <windows.h>
 #include <fstream>
 
@@ -166,6 +166,8 @@ int main()
 		&pi
 	);
 	WaitForSingleObject(pi.hProcess, INFINITE);
+	CloseHandle(pi.hThread);
+	CloseHandle(pi.hProcess);
 	ifstream read_file;
 	read_file.open("D:\\C+\\Parent\\Release\\group.DAT", ios::binary);
 	if (!read_file.is_open())
@@ -181,3 +183,4 @@ int main()
 	system("pause");
 	return 0;
 }
+
