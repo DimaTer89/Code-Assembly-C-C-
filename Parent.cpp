@@ -44,7 +44,7 @@ int main()
 	SetConsoleOutputCP(1251);
 	Parent ob;
 	ofstream write_file;
-	write_file.open("D:\\C+\\Parent\\Release\\group.txt", ios::binary|ios::out|ios::app);
+	write_file.open("D:\\C+\\Parent\\Release\\group.DAT", ios::binary|ios::out|ios::app);
 	char key = 'д';
 	while (key == 'д')
 	{
