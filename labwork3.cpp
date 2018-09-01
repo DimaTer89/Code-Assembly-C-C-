@@ -9,10 +9,11 @@ using namespace std;
 DWORD WINAPI MyThreadWork(LPVOID)
 {
 	int sleep;
-	bool flag_1 = false;
-	int count = 0;
+	EnterCriticalSection(&cs);
 	cout << " Введите время сна : ";
 	cin >> sleep;
+	bool flag_1 = false;
+	int count = 0;
 	for (int i = 0; i < size_1; i++)
 	{
 		bool flag = false;
@@ -33,7 +34,7 @@ DWORD WINAPI MyThreadWork(LPVOID)
 	int score = 0;
 	int num = 0;
 	int i;
-	while(score<count)
+	while (score<count)
 	{
 		flag_1 = false;
 		for (i = num; i < size_1; i++)
@@ -52,11 +53,11 @@ DWORD WINAPI MyThreadWork(LPVOID)
 			}
 			if (flag == false)
 			{
-				for (int j = i + 1; j < size_1; j++)
+				for (int j = i; j < size_1-1; j++)
 				{
 					double tmp = d_arr[j];
-					d_arr[j] = d_arr[j - 1];
-					d_arr[j - 1] = tmp;
+					d_arr[j] = d_arr[j + 1];
+					d_arr[j + 1] = tmp;
 				}
 				flag_1 = true;
 			}
@@ -64,12 +65,12 @@ DWORD WINAPI MyThreadWork(LPVOID)
 		if (flag_1 == true)
 		{
 			score++;
-			i=num;
+			i = num;
 		}
-    }
-	for (int i = 0; i<size_1; i++)
+	}
+	for (int i = 0; i < size_1; i++)
 	{
-		for (int j = i; j<size_1; j++)
+		for (int j = i; j < size_1; j++)
 		{
 			if (d_arr[j] == d_arr[i])
 			{
@@ -82,10 +83,11 @@ DWORD WINAPI MyThreadWork(LPVOID)
 				}
 			}
 		}
-	cout << " В потоке work обработан " << i + 1 << " элемент массива \n";
-	ReleaseSemaphore(hSemafore, 1, NULL);
-	Sleep(sleep);
+		cout << " В поток Work обработан " << i + 1 << " элемент " << endl;
+		ReleaseSemaphore(hSemafore, 1, NULL);
+		Sleep(sleep);
 	}
+	LeaveCriticalSection(&cs);
 	return 0;
 }
 DWORD WINAPI MyThreadSumElement(LPVOID)
@@ -118,9 +120,9 @@ int main()
 	cout << " Введите элементы массива \n";
 	for (int i = 0; i < size_1; i++)
 	{
-		cout << " Элемент №  " << i + 1<< " = ";
+		cout << " Элемент №  " << i + 1 << " = ";
 		cin >> elem;
-		d_arr[i]=elem;
+		d_arr[i] = elem;
 	}
 	cout << " Размер массива = " << size_1 << endl;
 	cout << " Исходный массив \n";
@@ -150,14 +152,12 @@ int main()
 		system("pause");
 		return 1;
 	}
-	EnterCriticalSection(&cs);
 	for (int i = 0; i < size_1; i++)
 	{
-	
+
 		WaitForSingleObject(hSemafore, INFINITE);
-		cout << " В потоке main подготовлен элемент " << i + 1 << " : " << d_arr[i] << " " << flush<<endl;
+		cout << " В потоке main подготовлен " << i + 1 << " элемент : " << d_arr[i] << " " << flush << endl;
 	}
-	LeaveCriticalSection(&cs);
 	WaitForSingleObject(hThread_1, INFINITE);
 	CloseHandle(hThread);
 	CloseHandle(hSemafore);
