@@ -19,9 +19,10 @@ int main()
 	int j = 0;
 	int* arr = NULL;
 	int* arr_1 = NULL;
-	int size_memory=4096;
 	int size_masiv;
-	hHeap = HeapCreate(HEAP_NO_SERIALIZE, size_memory, 0);
+	cout << " Введите размер массива : ";
+	cin >> size_masiv;
+	hHeap = HeapCreate(HEAP_NO_SERIALIZE, 2 * size_masiv, 0);
 	if (!hHeap)
 	{
 		cout << " Куча не выделилась \n";
@@ -30,18 +31,19 @@ int main()
 	}
 	do
 	{
+		system("cls");
 		cout << " 1 - Заполнить массив \n";
 		cout << " 2 - Вывести массив на экран \n";
 		cout << " 3 - Записать массив в файл \n";
 		cout << " 4 - Вывести массив из файла \n";
-		cout << " 5 - Сформировать новый массив, в который записать старый в обращённой (перевёрнутой форме). Результат вывести на экран \n";
+		cout << " 5 - Сформировать новый массив, в который записать старый в перевёрнутой форме. Результат вывести на экран \n";
 		cout << " 6 - Выход\n";
+		cout << " ===> ";
 		cin >> key;
 		switch (key)
 		{
 		case 1:
-			cout << " Введите размер массива : ";
-			cin >> size_masiv;
+			
 			arr = (int*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, size_masiv * sizeof(int));
 			if (!arr)
 			{
@@ -57,6 +59,13 @@ int main()
 			}
 			break;
 		case 2:
+			if (!arr)
+			{
+				cout << " Массив не сформирован.\nДля продолжения нажмите Enter...  ";
+				cin.get();
+				system("pause");
+				break;
+			}
 			cout << " Массив \n";
 			for (int i = 0; i < size_masiv; i++)
 			{
@@ -74,6 +83,12 @@ int main()
 		case 4:
 			break;
 		case 5:
+			if (!arr)
+			{
+				cout << " Массив не сформирован.\nДля продолжения нажмите Enter...  ";
+				cin.get();
+				break;
+			}
 			j = 0;
 			arr_1 = (int*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, size_masiv * sizeof(int));
 			if (!arr_1)
@@ -98,15 +113,28 @@ int main()
 					cout << endl;
 			}
 			cout << endl;
+			if (!HeapFree(hHeap, NULL, arr_1))
+			{
+				cout << " Ошибка освобождения памяти \n";
+			}
 			system("pause");
 			break;
 		case 6:
+			if (!HeapFree(hHeap, NULL, arr))
+			{
+				cout << " Ошибка освобождения памяти \n";
+			}
+			if (!HeapDestroy(hHeap))
+			{
+				cout << " Ошибка удаления памяти \n";
+			}
+			cout << " До свидания, нажмите Enter\n";
+			cin.get();
 			break;
 		default:
 			cout << " Данного функции нет в меню\n";
 		}
 
 	} while (key != 6);
-	system("pause");
 	return 0;
 }
