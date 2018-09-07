@@ -1,8 +1,8 @@
-/*Ввести одномерный целочисленный массив размерностью N в память ПЭВМ. 
-Память под массив выделить используя динамическое создание кучи при помощи системного вызова HeapCreate()и распределения памяти из кучи при помощи функция HеарАllос(). 
-Вывести массив на экран по пять элементов в строке. Записать массив в файл. Вывести массив из файла на экран по пять элементов в строке. 
+/*Ввести одномерный целочисленный массив размерностью N в память ПЭВМ.
+Память под массив выделить используя динамическое создание кучи при помощи системного вызова HeapCreate()и распределения памяти из кучи при помощи функция HеарАllос().
+Вывести массив на экран по пять элементов в строке. Записать массив в файл. Вывести массив из файла на экран по пять элементов в строке.
 Сформировать новый массив, в который записать старый в обращённой (перевёрнутой форме).
-Результат вывести на экран. 
+Результат вывести на экран.
 Работу программы построить в виде меню.*/
 #include <iostream>
 #include <Windows.h>
@@ -14,21 +14,13 @@ int main()
 	system("cls");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	HANDLE hHeap;
+	HANDLE hHeap=NULL;
 	int key = 0;
 	int j = 0;
 	int* arr = NULL;
 	int* arr_1 = NULL;
 	int size_masiv;
-	cout << " Введите размер массива : ";
-	cin >> size_masiv;
-	hHeap = HeapCreate(HEAP_NO_SERIALIZE, 2 * size_masiv, 0);
-	if (!hHeap)
-	{
-		cout << " Куча не выделилась \n";
-		system("pause");
-		exit(0);
-	}
+	FILE* in, *out;
 	do
 	{
 		system("cls");
@@ -43,7 +35,15 @@ int main()
 		switch (key)
 		{
 		case 1:
-			
+			cout << " Введите размер массива : ";
+			cin >> size_masiv;
+			hHeap = HeapCreate(HEAP_NO_SERIALIZE, 2 * size_masiv, 0);
+			if (!hHeap)
+			{
+				cout << " Куча не выделилась \n";
+				system("pause");
+				exit(0);
+			}
 			arr = (int*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, size_masiv * sizeof(int));
 			if (!arr)
 			{
@@ -63,7 +63,7 @@ int main()
 			{
 				cout << " Массив не сформирован.\nДля продолжения нажмите Enter...  ";
 				cin.get();
-				system("pause");
+				
 				break;
 			}
 			cout << " Массив \n";
@@ -79,6 +79,7 @@ int main()
 			system("pause");
 			break;
 		case 3:
+
 			break;
 		case 4:
 			break;
@@ -97,7 +98,7 @@ int main()
 				system("pause");
 				exit(0);
 			}
-			
+
 			for (int i = size_masiv - 1; i >= 0; i--)
 			{
 				arr_1[j] = *(arr + i);
