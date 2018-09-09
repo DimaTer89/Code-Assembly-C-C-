@@ -14,13 +14,22 @@ int main()
 	system("cls");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	HANDLE hHeap=NULL;
+	HANDLE hHeap = NULL;
+	int elem = 0;
 	int key = 0;
 	int j = 0;
 	int* arr = NULL;
 	int* arr_1 = NULL;
 	int size_masiv;
-	FILE* in, *out;
+	int size_memory = 4096;
+	FILE* in=NULL, *out=NULL;
+	hHeap = HeapCreate(HEAP_NO_SERIALIZE, size_memory, size_memory);
+	if (!hHeap)
+	{
+		cout << " Куча не выделилась \n";
+		system("pause");
+		exit(0);
+	}
 	do
 	{
 		system("cls");
@@ -37,13 +46,7 @@ int main()
 		case 1:
 			cout << " Введите размер массива : ";
 			cin >> size_masiv;
-			hHeap = HeapCreate(HEAP_NO_SERIALIZE, 2 * size_masiv, 0);
-			if (!hHeap)
-			{
-				cout << " Куча не выделилась \n";
-				system("pause");
-				exit(0);
-			}
+			
 			arr = (int*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, size_masiv * sizeof(int));
 			if (!arr)
 			{
@@ -61,9 +64,8 @@ int main()
 		case 2:
 			if (!arr)
 			{
-				cout << " Массив не сформирован.\nДля продолжения нажмите Enter...  ";
-				cin.get();
-				
+				cout << " Массив не сформирован.\n";
+				system("pause");
 				break;
 			}
 			cout << " Массив \n";
@@ -79,15 +81,67 @@ int main()
 			system("pause");
 			break;
 		case 3:
-
+			if (!arr)
+			{
+				cout << " Массив не сформирован.\n";
+				system("pause");
+				break;
+			}
+			if (!(in = fopen("data.txt", "w")))
+			{
+				cout << " Не удалось открыть файл \n";
+				system("pause");
+				break;
+			}
+			for (int i = 0; i < size_masiv; i++)
+			{
+				fprintf(in, "%d ", arr[i]);
+			}
+			fclose(in);
+			cout << " Данные успешно записаны \n";
+			system("pause");
 			break;
 		case 4:
+			arr = NULL;
+			if (size_masiv > 0)
+			{
+				size_masiv = 0;
+			}
+			if (!(out = fopen("data.txt", "r")))
+			{
+				cout << " Не удалось открыть файл \n";
+				system("pause");
+				break;
+			}
+			while ((fscanf(out, "%d ", &elem))!=EOF)
+			{
+				if (!out)
+					break;
+				size_masiv++;
+			}
+			fseek(out, 0L, SEEK_SET);
+			arr = (int*)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, size_masiv * sizeof(int));
+			if (!arr)
+			{
+				cout << " Память не выделена \n";
+				system("pause");
+				break;
+			}
+			for (int i = 0; i < size_masiv; i++)
+			{
+				fscanf(out, "%d ", &arr[i]);
+			}
+			fclose(out);
+			cout << " Данные успешно считаны \n";
+			system("pause");
 			break;
+
+
 		case 5:
 			if (!arr)
 			{
 				cout << " Массив не сформирован.\nДля продолжения нажмите Enter...  ";
-				cin.get();
+				system("pause");
 				break;
 			}
 			j = 0;
@@ -117,6 +171,7 @@ int main()
 			if (!HeapFree(hHeap, NULL, arr_1))
 			{
 				cout << " Ошибка освобождения памяти \n";
+				system("pause");
 			}
 			system("pause");
 			break;
@@ -124,13 +179,15 @@ int main()
 			if (!HeapFree(hHeap, NULL, arr))
 			{
 				cout << " Ошибка освобождения памяти \n";
+				system("pause");
 			}
 			if (!HeapDestroy(hHeap))
 			{
 				cout << " Ошибка удаления памяти \n";
+				system("pause");
 			}
-			cout << " До свидания, нажмите Enter\n";
-			cin.get();
+			cout << " До свидания\n";
+			system("pause");
 			break;
 		default:
 			cout << " Данного функции нет в меню\n";
