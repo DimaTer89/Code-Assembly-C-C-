@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp4
+{
+    class Program
+    {
+        static int Input(string query)
+        {
+            bool flag = false;
+            int temp;
+            Console.Write(query);
+            do
+            {
+                
+                if (!int.TryParse(Console.ReadLine(), out temp))
+                      Console.Write("Введите снова : ");
+                else
+                    flag = true;
+
+            } while (!flag);
+            return temp;
+        }
+        static void Main(string[] args)
+        {
+            Console.Clear();
+            try
+            {
+                int x = Input("Введите целое число : ");
+                if (x < 0)
+                    throw new ApplicationException("Отрицательное число. ");
+                Console.WriteLine("Вы ввели целое число - "+x);
+                if (x > 500)
+                    throw new Exception("ку-ку");
+                checked
+                {
+                    byte b = (byte)x;
+                    Console.WriteLine("b=" + b);
+                }
+                
+            }
+            
+            catch(FormatException)
+            {
+                Console.WriteLine("Это не целое число.");
+            }
+            catch (OverflowException exseption)
+            {
+                Console.WriteLine("Слишком длинное число. "+exseption.Message+" "+exseption.TargetSite.Name);
+            }
+            catch(Exception ex) when (ex.Message== "Отрицательное число. ")
+            {
+                Console.WriteLine(ex.Message+ "Какая-то ошибка. Это нам не нужно");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + "Какая-то ошибка.");
+            }
+            catch
+            {
+                Console.WriteLine("Что-то пошло не так ");
+            }
+            finally
+            {
+                Console.WriteLine("Это всегда работает");
+            }
+            Console.ReadKey();
+        }
+    }
+}
