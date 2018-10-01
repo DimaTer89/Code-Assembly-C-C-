@@ -181,3 +181,57 @@ namespace ConsoleApp6
     }
 }
 ==========================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+/*Для решения задачи создать класс Matrix, содержащий 
+	-закрытое поле-массив для хранения данных, 
+	-конструктор без параметров для создания единичной матрицы 3×3, 
+	-конструктор с параметрами (параметр – матрица целых чисел),
+	-метод  ToString(), возвращающий строковое представление  матрицы, 
+	-индексатор для доступа к элементам поля-массива, 
+	-метод GetLenth – аналог одноименного метода из Array,
+	-закрытый (private) метод, возвращающий true, если столбец состоит из положительных элементов (параметр – номер столбца),
+	-метод, возвращающий сумму элементов столбцов, состоящих из положительных элементов,
+	-свойство, возвращающее сумму элементов диагоналей матрицы.
+*/
+namespace ConsoleApp7
+{
+    class Matrix
+    {
+        int[,] arr;
+        public Matrix()
+        {
+            arr = new int[3, 3]
+            {{4,5,6 },
+             {7,8,9 },
+             {1,2,3 }};
+        }
+        public Matrix(int[,] arr)
+        {
+            this.arr = arr;
+        }
+        public void ShowMatrix()
+        {
+            for(int i=0;i<arr.GetLength(0);i++)
+            {
+                for(int j=0;j<arr.GetLength(1);j++)
+                    Console.Write(arr[i,j]+"  ");
+                Console.WriteLine();
+            }
+        }
+        public int this[int i,int j]
+        {
+            get
+            {
+                return arr[i,j];
+            }
+            set
+            {
+                arr[i,j] = value;
+            }
+        }
+    }
+}
