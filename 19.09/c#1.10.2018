@@ -1,0 +1,183 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6
+{
+    class FilmsColection
+    {
+        Film[] film;
+        public int kolFilm => film.Length;
+        public FilmsColection(Film[] film)
+        {
+            this.film = film;
+        }
+        public void ShowFilms()
+        {
+
+            for(int i=0;i<kolFilm;i++)
+            {
+                Console.WriteLine("=================================");
+                Console.WriteLine("Название : "+film[i].NameFilm);
+                Console.WriteLine("Продюссер : "+film[i].Surname_Producer);
+                Console.WriteLine("Жанр : "+film[i].Genre);
+                Console.WriteLine("Затраты на трюки : "+film[i].Tricks);
+                Console.Write("Затраты на серии : ");
+                for (int j = 0; j < film[i].Expenses.Length; j++)
+                    Console.Write(film[i].Expenses[j] + " $ ");
+                Console.WriteLine();
+                Console.WriteLine("Затраты на фильм :"+film[i].All_Expenses()+" $");
+                Console.WriteLine("=================================");
+            }
+        }
+        public void All_serial_boevik()
+        {
+            decimal sum = 0;
+            decimal sum1 = 0;
+            foreach (Film item in film)
+            {
+                if (String.Compare("Сериал", item.Genre) == 0)
+                     sum += item.All_Expenses();
+                if (String.Compare("Боевик", item.Genre) == 0)
+                    sum1 += item.All_Expenses();
+            }
+            Console.WriteLine("На сериалы потрачено денег налогоплательщиков : "+sum);
+            Console.WriteLine("На боевики потрачено денег налогоплательщиков : "+sum1);
+            Console.WriteLine("На всё потрачено : "+(sum+sum1));
+        }
+        public void Sort()
+        {
+            Array.Sort(film, Compare);
+        }
+
+        public int Compare(Film f1,Film f2)
+        {
+            if (f1 == null && f2 == null)
+                return 0;
+            if (f1 == null)
+                return -1;
+            if (f2 == null)
+                return 0;
+            if (String.Compare(f1.Genre,f2.Genre)<0)
+                return -1;
+            if (String.Compare(f1.Genre, f2.Genre) == 0)
+                return 0;
+            else
+                return 1;
+        }
+    }
+}
+================================================================
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+/*Класс «Фильм» должен содержать следующие элементы: поле название, поле фамилия режиссера, поле жанр (сериал, боевик, комедия и т.д.), 
+ * поле затраты на каждую серию (массив), поле затраты на постановку трюков, конструктор с параметрами,
+ * метод  для получения затрат на съемку фильма, конструктор с параметрами, свойства для чтения полей класса.
+ * */
+namespace ConsoleApp6
+{
+    class Film
+    {
+        string nameFilm;
+        string surname_producer;
+        string genre;
+        decimal expenses_tricks;
+        decimal[] expenses;
+        public Film(string name,string producer,string genre,decimal tricks,params decimal[] expens)
+        {
+            nameFilm = name;
+            surname_producer = producer;
+            this.genre = genre;
+            expenses_tricks = tricks;
+            expenses = expens;
+        }
+        public string NameFilm
+        {
+            get
+            {
+                return nameFilm;
+            }
+        }
+        public string Surname_Producer
+        {
+            get
+            {
+                return surname_producer;
+            }
+        }
+        public string Genre
+        {
+            get
+            {
+                return genre;
+            }
+        }
+        public decimal Tricks
+        {
+            get
+            {
+                return expenses_tricks;
+            }
+        }
+
+        public decimal[] Expenses
+        {
+            get
+            {
+                return expenses;
+            }
+        }
+        public decimal All_Expenses()
+        {
+            decimal sum = 0;
+            sum += expenses_tricks;
+            foreach (decimal item in expenses)
+            {
+                sum += item;
+            }
+            return sum;
+            //return (expenses.Sum()+expenses_tricks);
+        }
+    }
+}
+===========================================================
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+/*Класс «Фильм» должен содержать следующие элементы: поле название, поле фамилия режиссера, поле жанр (сериал, боевик, комедия и т.д.), 
+ * поле затраты на каждую серию (массив), поле затраты на постановку трюков, конструктор с параметрами,
+ * метод  для получения затрат на съемку фильма, конструктор с параметрами, свойства для чтения полей класса.
+ * */
+namespace ConsoleApp6
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Film[] film =
+            {
+                new Film("Такси","Люк Бессон","Комедия",50000,6500000),
+                new Film("Крепкий орешек","Джон Мактирнан","Боевик",500000,65000000),
+                new Film("Всё или ничего","Питер Сигал","Комедия",40000,500000),
+                new Film("Пила","Джэймс Ван","Ужасы",10000,600000),
+                new Film("Игра престолов","Дэвид Бениофф","Сериал",30000,3500000,6500000,5500000),
+            };
+            FilmsColection films = new FilmsColection(film);
+            films.ShowFilms();
+            films.Sort();
+            Console.WriteLine();
+            Console.WriteLine();
+            films.ShowFilms();
+            films.All_serial_boevik();
+            Console.ReadKey();
+        }
+    }
+}
+==========================================
