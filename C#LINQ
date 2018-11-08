@@ -1,0 +1,20 @@
+var newEmployes = from listEm in listEmployees
+                              join type in listSalaryes
+                              on listEm.Position equals type.Position
+                              select new { listEm.Surname, listEm.Department, type.Salary };
+                              
+
+            Console.WriteLine("*****************************");
+            foreach (var item in newEmployes)
+            {
+                Console.WriteLine(item.Surname+" : "+item.Department+" : "+item.Salary);
+            }
+            var x = newEmployes.GroupBy(list => list.Department).Select(gr=>new { gr.Key, sum = gr.Average(list=>list.Salary)});
+            Console.WriteLine("*****************************");
+            foreach (var item in x)
+            {
+                Console.WriteLine(item.Key+" : "+item.sum);
+            }
+            var otdel = x.FirstOrDefault(list => list.sum == x.Max(list2 => list2.sum));
+            Console.WriteLine("*****************************");
+            Console.WriteLine(otdel.Key+" "+otdel.sum);
