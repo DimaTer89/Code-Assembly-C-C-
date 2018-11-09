@@ -18,3 +18,61 @@ var newEmployes = from listEm in listEmployees
             var otdel = x.FirstOrDefault(list => list.sum == x.Max(list2 => list2.sum));
             Console.WriteLine("*****************************");
             Console.WriteLine(otdel.Key+" "+otdel.sum);
+======================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SamPab
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] values1 = new int[5] { 1, 10, 5, 13, 4 };
+            int[] values2 = new int[5] { 19, 1, 4, 9, 8 };
+            //Посчитать среднее значение четных элементов, которые больше 10.
+            var averageSumQuery = values1.Concat(values2).Where(list => list < 10 && (list % 2 == 0)).Average(list=>list);
+            Console.WriteLine("*****************");
+            Console.WriteLine("Среднее значение четных элементов, которые больше 10");
+            Console.WriteLine($"{averageSumQuery:f2}");
+            //Выбрать только уникальные элементы из массивов values1 и values2. 
+            var unickQuery = values1.Concat(values2).Distinct();
+            Console.WriteLine("*****************");
+            Console.WriteLine("Только уникальные элементы из массивов values1 и values2");
+            foreach (var item in unickQuery)
+            {
+                Console.Write(item+"  ");
+            }
+            Console.WriteLine();
+            //Найти максимальный элемент массива values2, который есть в массиве values1. 
+            Console.WriteLine("*****************");
+            Console.WriteLine("Максимальный элемент массива values2, который есть в массиве values1");
+            Console.WriteLine(values2.Join(values1, list => list, list2 => list2, (list, list2) => list).Max(list => list));
+            //Посчитать сумму элементов массивов values1 и values2, которые попадают в диапазон от 5 до 15.
+            Console.WriteLine("*****************");
+            Console.WriteLine("Сумма элементов массивов values1 и values2, которые попадают в диапазон от 5 до 15");
+            Console.WriteLine(values1.Concat(values2).Where(list => list >= 5 && list <= 15).Sum(list => list));
+            //Отсортировать элементы массивов values1 и values2 по убыванию.
+            Console.WriteLine("*****************");
+            var sortValues1Query = values1.OrderByDescending(list => list);
+            var sortValues2Query = values2.OrderByDescending(list => list);
+            Console.WriteLine("Отсортированные элементы values1");
+            foreach (var item in sortValues1Query)
+            {
+                Console.Write(item+"  ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Отсортированные элементы values1");
+            foreach (var item in sortValues2Query)
+            {
+                Console.Write(item + "  ");
+            }
+            Console.WriteLine();
+            Console.ReadKey();
+        }
+    }
+}
