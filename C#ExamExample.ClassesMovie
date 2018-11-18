@@ -1,0 +1,189 @@
+class Movie
+{
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+/*Класс «Фильм» должен быть абстрактным и содержать следующие элементы: поле название, поле фамилия режиссера, поле жанр (сериал, боевик, комедия и т.д.), конструктор с параметрами, свойства для чтения полей класса, абстрактный метод для определения затрат на съемки фильма. */
+namespace ExamExample
+{
+    [Serializable]
+    abstract class Movie
+    {
+        string title;
+        string producer;
+        string genre;
+        public Movie(string title,string producer,string genre)
+        {
+            Title = title;
+            Producer = producer;
+            Genre = genre;
+        }
+        public string Title
+        {
+            get => title;
+            set
+            {
+                title = value;
+            }
+        }
+        public string Producer
+        {
+            get => producer;
+            set
+            {
+                producer = value;
+            }
+        }
+        public string Genre
+        {
+            get => genre;
+            set
+            {
+                genre = value;
+            }
+        }
+        abstract public decimal FilmShootingCosts();
+        public override string ToString()
+        {
+            return ("╠═════════════════════════════╬═════════════════════════════╬════════════════════╬══════════════════════════════╣\n" + $"║{Title,29}║{Producer,29}║{Genre,20}║");
+        }
+    }
+}
+}
+==========================================================================================
+class TVSeries
+{
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+/*Класс сериалов должен содержать дополнительные поля - количество серий, затраты на съемку одной серии, конструктор с параметрами, реализацию метода  для получения затрат на съемку фильма, свойство для чтения количества серий, операции true и false ( сериал истинный, если у него больше трех серий).*/
+namespace ExamExample.FilmClasses
+{
+    [Serializable]
+    class TVSeries : Movie
+    {
+        const int trueSerial= 3;
+        int countSeries;
+        decimal costOneSeries;
+        public TVSeries(string title,string producer,string genre,int countSeries=1,decimal costOneSeries=500):base(title,producer,genre)
+        {
+            CountSeries = countSeries;
+            CostOneSeries = costOneSeries;
+        }
+        public int CountSeries
+        {
+            get => countSeries;
+            set
+            {
+                if (value > 0)
+                    countSeries = value;
+                else
+                    throw new Exception("Ошибка количества серий");
+            }
+        }
+        public decimal CostOneSeries
+        {
+            get => costOneSeries;
+            set
+            {
+                if (value > 0)
+                    costOneSeries = value;
+                else
+                    throw new Exception("Ошибка затраты на серию");
+            }
+        }
+        public override decimal FilmShootingCosts() => (costOneSeries * countSeries);
+        public bool TrueTVSerail() => (countSeries > trueSerial);
+        public override string ToString()
+        {
+            if (base.Genre == "Сериал")
+                return (base.ToString() +$"{CountSeries+" серий",10}{" ",20}║");
+            else
+                return (base.ToString()+$"{" ",30}║");
+        }
+    }
+}
+}
+==============================================================================
+class ActionMovie
+{
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+/*Класс боевиков должен содержать дополнительное поле-фамилия постановщика трюков, затраты на каждую серию (массив), затраты на постановку трюков, конструктор с параметрами, свойства для чтения полей класса, реализацию метода  для получения затрат на съемку фильма, метод с переменным числом параметров, возвращающий затраты за указанные серии (например, zatraty(0,2) – затраты за 1-ю и 2-ю серию, zatraty(1) – затраты за 1-ю серию и т.д.).*/
+namespace ExamExample.FilmClasses
+{
+    [Serializable]
+    class ActionMovie : Movie
+    {
+        string stuntman;
+        decimal[] costSeria;
+        decimal stagingTricks;
+        public ActionMovie(string title, string producer, string genre, string stuntman, decimal[] costSeria,decimal stagingTricks):base(title,producer,genre)
+        {
+            Stuntman = stuntman;
+            CostSeria = costSeria;
+            StagingTricks = stagingTricks;
+        }
+        public string Stuntman
+        {
+            get => stuntman;
+            set
+            {
+                stuntman = value;
+            }
+        }
+        public decimal[] CostSeria
+        {
+            get => costSeria;
+            set
+            {
+                if (value.All(num => num > 0))
+                    costSeria = value;
+                else
+                    throw new Exception("Ошибка массива затрат на серии");
+            }
+        }
+        public decimal StagingTricks
+        {
+            get => stagingTricks;
+            set
+            {
+                if (value > 0)
+                    stagingTricks = value;
+                else
+                    throw new Exception("Ошибка затраты на серию");
+            }
+        }
+        public override decimal FilmShootingCosts()
+        {
+            return (costSeria.Sum(num => num) + stagingTricks);
+        }
+        public string CostsPerSeries(params int[] count)
+        {
+            StringBuilder tmp = new StringBuilder();
+            for(int i=0;i<count.Length;i++)
+            {
+                Console.WriteLine(count[i]);
+                tmp.Append(costSeria[count[i]-1]+", ");
+            }
+            tmp.Remove(tmp.Length - 2, 1);
+            return tmp.ToString();
+        }
+        public override string ToString()
+        {
+            if (base.Genre == "Боевик")
+                return (base.ToString()+"Постановщик трюков : "+$"{" ",9}║\n"+$"║{"  ",29}║{"  ",29}║{"  ",20}║{Stuntman,20}{" ",10}║");
+            else
+                return (base.ToString()+$"{" ",30}║");
+        }
+    }
+}
+
+}
