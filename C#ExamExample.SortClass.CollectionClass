@@ -1,0 +1,75 @@
+class Sort
+{
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ExamExample
+{
+    class SortMovie : IComparer<Movie>
+    {
+        public int Compare(Movie x, Movie y)
+        {
+            if (x == null && y == null)
+                return 0;
+            if (x == null)
+                return 1;
+            if (y == null)
+                return -1;
+            else
+                return x.FilmShootingCosts().CompareTo(y.FilmShootingCosts());
+        }
+    }
+}
+}
+====================================================
+CollectionClass
+{
+using ExamExample.FilmClasses;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Runtime.Serialization.Formatters.Soap;
+using System.IO;
+/*Создать параметризованную коллекцию (generic) с необходимой функциональностью. Создать в этом классе метод для поиска информации по заданному критерию (критерий  передавать через параметр-делегат: стандартный или созданный). Предусмотреть метод для сериализации объектов с выбранной информацией в формате SOAP. */
+namespace ExamExample
+{
+    class MovieCollection<T>
+    {
+        List<T> movieList = new List<T>();
+        SoapFormatter formatter = new SoapFormatter();
+        public List<T> MovieList => movieList;
+        public MovieCollection(List<T> list)
+        {
+            movieList = list;
+        }
+        public void ShowList() => movieList.ForEach(list => Console.WriteLine(list));
+        public void SumSer<K>(K rez)
+        {
+           Console.WriteLine(rez);
+        }
+       
+        public void SerializationMovie(List<T> movList)
+        {
+            using (FileStream file = File.Create("movie.soap"))
+            {
+                formatter.Serialize(file, movList.ToArray());
+            }
+            Console.WriteLine("Сериализация прошла успешно");
+        }
+        public void DeSerializationMovie()
+        {
+            using (FileStream file = File.OpenRead("movie.soap"))
+            {
+               Movie[] mov = (Movie[])formatter.Deserialize(file);
+               mov.ToList().ForEach(list => Console.WriteLine(list));
+            }
+            
+        }
+    }
+}
+}
