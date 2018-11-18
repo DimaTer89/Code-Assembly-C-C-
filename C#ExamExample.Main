@@ -1,0 +1,230 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ExamExample.FilmClasses;
+using System.IO;
+
+
+namespace ExamExample
+{
+    delegate decimal MyDelegate(MovieCollection<Movie> movieCollection,Predicate<string> predicate);
+    delegate string MyDelegate1(MovieCollection<Movie> movieCollection, Predicate<string> predicate, string prodcer,string Title, params int[] numsSer);
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.SetWindowSize(120, 45);
+            const int exitMain = 6;
+            int key;
+            Predicate<string> sumSeries = delegate (string genre)
+            {
+                 return (genre == "Сериал");
+            };
+            Predicate<string> actionProducerMovie = delegate (string genre)
+            {
+                return (genre == "Боевик");
+            };
+            List<Movie> list = new List<Movie>();
+            list = MovieList();
+            MovieCollection<Movie> movieCollection = new MovieCollection<Movie>(list);
+            MyDelegate myDelegate = SumSeries;
+            MyDelegate1 myDelegate1 = Action;
+            string[] myMain =
+            {
+                "Вывод информации на экран",
+               	"Определение суммарных затрат на съемку сериалов, в которых больше трех серий.",
+           	    "Выводит на экран информацию о боевиках заданного режиссера с затратами за указанные серии.",
+                "Сортировка информации по возрастанию затрат.",
+                "Сериализация объектов  с информацией  о сериалах в формате SOAP.",
+                "Выводит на экран фамилию слушателя, текущую дату и время.", 
+                "Выход"
+            };
+            Menu myMenu = new Menu(myMain);
+            do
+            {
+                key= myMenu.ShowMenu();
+                try
+                {
+                    switch (key)
+                    {
+                        case 0:
+                            BaseColor();
+                            Console.SetCursorPosition(0, myMain.Length);
+                            UpTablica();
+                            movieCollection.ShowList();
+                            Down_Tablica();
+                            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                            Console.ReadKey();
+                            break;
+                        case 1:
+                            BaseColor();
+                            Console.SetCursorPosition(0, myMain.Length);
+                            Console.WriteLine("╔═════════════════════════════╦═════════════════════════════╗");
+                            Console.WriteLine("║      Название фильма        ║           Режиссёр          ║");
+                            movieCollection.MovieList.Where(list1 => list1.Genre == "Сериал" && ((TVSeries)list1).TrueTVSerail()).Select(list1 => new { list1.Title, list1.Producer }).ToList().ForEach(list1 => Console.WriteLine($"╠═════════════════════════════╬═════════════════════════════╣\n║{ list1.Title,29}║{list1.Producer,29}║"));
+                            Console.WriteLine("╚═════════════════════════════╩═════════════════════════════╝");
+                            Console.Write("Общая сумма затрат : ");
+                            movieCollection.SumSer(myDelegate(movieCollection, sumSeries));
+                            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                            Console.ReadKey();
+                            break;
+                        case 2:
+                            BaseColor();
+                            Console.SetCursorPosition(0, myMain.Length);
+                            string nameProducer;
+                            string title;
+                            Console.Write("Введите продюссера : ");
+                            nameProducer = Console.ReadLine();
+                            Console.Write("Введите название фильма : ");
+                            title = Console.ReadLine();
+                            Console.Write("Введите количество серий : ");
+                            int count = int.Parse(Console.ReadLine());
+                            int[] kolSeries = new int[count];
+                            Console.WriteLine("Введите номера серий");
+                            for (int i = 0; i < count; i++)
+                            {
+                                Console.Write("===>");
+                                kolSeries[i] = int.Parse(Console.ReadLine());
+                            }
+                            Console.Write(myDelegate1(movieCollection, actionProducerMovie, nameProducer, title, kolSeries));
+                            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                            Console.ReadKey();
+                            break;
+                        case 3:
+                            BaseColor();
+                            Console.SetCursorPosition(0, myMain.Length);
+                            movieCollection.MovieList.Sort(new SortMovie());
+                            UpTablica();
+                            movieCollection.ShowList();
+                            Down_Tablica();
+                            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                            Console.ReadKey();
+                            break;
+                        case 4:
+                            BaseColor();
+                            Console.SetCursorPosition(0, myMain.Length);
+                            movieCollection.SerializationMovie(movieCollection.MovieList.Where(movlist => movlist.Genre == "Сериал").Select(movList => movList).ToList());
+                            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                            Console.ReadKey();
+                            break;
+                        case 5:
+                            BaseColor();
+                            Console.SetCursorPosition(0, myMain.Length);
+                            Console.WriteLine("Слушатель : Терещенко Дмитрий Анатольевич " + "Дата : " + DateTime.Now.ToShortDateString() + " Время : " + DateTime.Now.ToShortTimeString());
+                            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                            Console.ReadKey();
+                            break;
+                        case 6:
+                            BaseColor();
+                            Console.SetCursorPosition(0, myMain.Length);
+                            Console.WriteLine("До свидания");
+                            Console.ReadKey();
+                            break;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                    Console.ReadKey();
+                }
+            } while (key != exitMain);
+        }
+        static void BaseColor()
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        static void UpTablica()
+        {
+            Console.WriteLine("╔═════════════════════════════╦═════════════════════════════╦════════════════════╦══════════════════════════════╗");
+            Console.WriteLine("║      Название фильма        ║           Режиссёр          ║        Жанр        ║   Дополнительная информация  ║");
+        }
+        static void Down_Tablica()
+        {
+            Console.WriteLine("╚═════════════════════════════╩═════════════════════════════╩════════════════════╩══════════════════════════════╝");
+        }
+        static string Action(MovieCollection<Movie> collection, Predicate<string> predicate,string producer,string title,params int[] numser)
+        {
+            bool flag = false;
+            List<Movie> list = collection.MovieList;
+            StringBuilder series = new StringBuilder();
+            List<Movie>tmp=list.Where(list2 => list2.Genre == "Боевик" && list2.Producer == producer && list2.Title == title).Select(list2 => list2).ToList();
+            var countSer=tmp.Select(list2 => new { Count=((ActionMovie)list2).CostSeria.Length });
+            foreach (var item in countSer)
+            {
+                if (numser.Length <= item.Count)
+                    flag = true;
+            }
+            if (flag)
+            {
+                for (int i = 0; i < numser.Length; i++)
+                {
+                    series.Append(numser[i] + ", ");
+                }
+                series.Remove(series.Length - 2, 1);
+                StringBuilder stringBuilder = new StringBuilder();
+                Console.WriteLine("Фильмы " + producer);
+                var name = tmp.Select(list2 => new { Name = list2.Title });
+                var cost = tmp.Select(list2 => new { cost = ((ActionMovie)list2).CostsPerSeries(numser) });
+                foreach (var item in name)
+                {
+                    stringBuilder.Append(item.Name + " : ");
+                }
+                foreach (var item in cost)
+                {
+                    stringBuilder.Append("Затраты на " + series.ToString() + "серии : " + item.cost);
+                }
+                stringBuilder.AppendLine();
+                return stringBuilder.ToString();
+            }
+            else
+            {
+                throw new Exception("Заданного количества серий не существует");
+            }
+        }
+        static decimal SumSeries(MovieCollection<Movie> movieCollection,Predicate<string> predicate)
+        {
+            List<Movie> list = movieCollection.MovieList;
+            decimal sum = 0;
+            for(int i=0;i<list.Count;i++)
+            {
+                if(predicate(list[i].Genre)&&((TVSeries)list[i]).TrueTVSerail())
+                {
+                   sum+=((TVSeries)list[i]).FilmShootingCosts();
+                }
+            }
+            return sum;
+        }
+        static List<Movie> MovieList()
+        {
+            string[] tmp;
+            string[] ser;
+            List<Movie> movList = new List<Movie>();
+            using (StreamReader reader = new StreamReader("movieList.txt",Encoding.Default))
+            {
+                while(!reader.EndOfStream)
+                {
+                    tmp = reader.ReadLine().Split(';');
+                    if (tmp[2] == "Сериал")
+                        movList.Add(new TVSeries(tmp[0], tmp[1], tmp[2], int.Parse(tmp[3]), decimal.Parse(tmp[4])));
+                    else if (tmp[2] == "Боевик")
+                    {
+                        ser = tmp[4].Split(' ');
+                        decimal[] costSer = new decimal[ser.Length];
+                        for (int i=0;i<ser.Length;i++)
+                        {
+                           costSer[i] = decimal.Parse(ser[i]);
+                        }
+                        movList.Add(new ActionMovie(tmp[0], tmp[1], tmp[2], tmp[3],costSer,decimal.Parse(tmp[5])));
+                    }
+                    else
+                        movList.Add(new TVSeries(tmp[0], tmp[1], tmp[2]));
+                }
+            }
+            return movList;
+        }
+    }
+}
