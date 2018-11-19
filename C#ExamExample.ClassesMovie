@@ -98,6 +98,20 @@ namespace ExamExample.FilmClasses
         }
         public override decimal FilmShootingCosts() => (costOneSeries * countSeries);
         public bool TrueTVSerail() => (countSeries > trueSerial);
+        public static bool operator true(TVSeries series)
+        {
+            if (series.CountSeries > 3)
+                return true;
+            else
+                return false;
+        }
+        public static bool operator false(TVSeries series)
+        {
+            if (series.CountSeries <= 3)
+                return true;
+            else
+                return false;
+        }
         public override string ToString()
         {
             if (base.Genre == "Сериал")
