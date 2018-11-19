@@ -191,7 +191,7 @@ namespace ExamExample
             decimal sum = 0;
             for(int i=0;i<list.Count;i++)
             {
-                if(predicate(list[i].Genre)&&((TVSeries)list[i]).TrueTVSerail())
+                if(predicate(list[i].Genre)&&(TVSeries)list[i])
                 {
                    sum+=((TVSeries)list[i]).FilmShootingCosts();
                 }
