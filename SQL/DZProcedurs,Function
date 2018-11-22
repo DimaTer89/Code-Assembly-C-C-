@@ -1,0 +1,55 @@
+--Домашнее задание
+drop function dbo.СписокИменинников
+create function dbo.СписокИменинников
+(@year varchar(30))
+ returns varchar(400) as
+begin
+--declare @year varchar(30)
+--set @year='18.03.2015'
+declare @years date
+set @years=convert(date,@year,104)
+declare @Фамилия varchar(80)
+declare @Имя varchar(40)
+declare @Список varchar(8000)
+declare КурсорСписок cursor for
+select Фамилия,Имя
+from Сотрудники c
+where format (c.Дата_рождения,'ddMM')=format(@years,'ddMM')
+and @years>ISNULL(Дата_найма,'01/01/1900')
+and @years<ISNULL(Дата_увольнения,'01/01/9999')
+open КурсорСписок
+fetch next from КурсорСписок into @Фамилия,@Имя
+set @Список=null;
+while @@FETCH_STATUS=0
+begin
+set @Список=ISNULL(@Список+' , '+@Фамилия+' '+@Имя,@Фамилия+' '+@Имя)
+fetch next from КурсорСписок
+into @Фамилия,@Имя
+end
+close КурсорСписок
+deallocate КурсорСписок 
+return @Список
+end 
+go
+
+select dbo.СписокИменинников('18.03.2015')СписокИменинников --1 шт
+select dbo.СписокИменинников('02.01.2017')СписокИменинников  --3 шт
+
+select dbo.СписокИменинников('04.01.2013')СписокИменинников  -- 1 шт
+select dbo.СписокИменинников('04.01.2011')СписокИменинников  -- еще не работала
+select dbo.СписокИменинников('04.01.2016')СписокИменинников  -- уже не работала
+
+ 
+ drop procedure Именинники
+
+ create procedure Именинники
+ @Год varchar(4)
+ as 
+ select @Год+'.'+convert(varchar,format(с.Дата_рождения,'MM.dd'),102) ДатаРождения, dbo.СписокИменинников((convert(varchar,format(с.Дата_Рождения,'dd.MM'),104)+'.'+@Год))Список_Именников
+ from Сотрудники с
+ where dbo.СписокИменинников((convert(varchar,format(с.Дата_Рождения,'dd.MM'),104)+'.'+@Год)) is not null
+ group by @Год+'.'+convert(varchar,format(с.Дата_рождения,'MM.dd'),102),dbo.СписокИменинников((convert(varchar,format(с.Дата_Рождения,'dd.MM'),104)+'.'+@Год))
+ --order by @Год+'.'+convert(varchar,format(с.Дата_рождения,'MM.dd'),102)
+ 
+
+ exec Именинники '2017'
