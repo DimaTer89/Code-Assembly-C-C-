@@ -4,8 +4,6 @@ create function dbo.СписокИменинников
 (@year varchar(30))
  returns varchar(400) as
 begin
---declare @year varchar(30)
---set @year='18.03.2015'
 declare @years date
 set @years=convert(date,@year,104)
 declare @Фамилия varchar(80)
@@ -49,7 +47,5 @@ select dbo.СписокИменинников('04.01.2016')СписокИмен�
  from Сотрудники с
  where dbo.СписокИменинников((convert(varchar,format(с.Дата_Рождения,'dd.MM'),104)+'.'+@Год)) is not null
  group by @Год+'.'+convert(varchar,format(с.Дата_рождения,'MM.dd'),102),dbo.СписокИменинников((convert(varchar,format(с.Дата_Рождения,'dd.MM'),104)+'.'+@Год))
- --order by @Год+'.'+convert(varchar,format(с.Дата_рождения,'MM.dd'),102)
  
-
  exec Именинники '2017'
