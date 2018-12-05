@@ -23,3 +23,56 @@ int main()
 	system("pause");
 	return 0;
 }
+=======================================
+#include <iostream>
+#include <Windows.h>
+#include<fstream>
+using namespace std;
+ 
+int Floor(int ,int ,int );
+int LessSqure(int, int, int);
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	fstream out;
+	char buffer[128];
+	out.open("d:\\AdventOfCodeDay2.txt", ios_base::in);
+	if (!out)
+	{
+		cout << "Не удаётся открыть файл" << endl;
+		system("pause");
+		exit(0);
+	}
+	char* word;
+	char* next;
+	int lenght=0;
+	int widht=0;
+	int height = 0;
+	int sum = 0;
+	while (out.getline(buffer,128))
+	{
+		word = strtok_s(buffer, " x ",&next);
+		lenght =atoi(word);
+		word = strtok_s(NULL, " x ",&next);
+		widht = atoi(word);
+		word = strtok_s(NULL, " x ",&next);
+		height = atoi(word);
+		sum += Floor(lenght, widht, height);
+	}
+	out.close();
+	cout << sum << endl;
+	system("pause");
+	return 0;
+}
+int Floor(int l,int w,int h)
+{
+	int rez = 0;
+	rez = 2 * l*w + 2 * w*h + 2 * h*l;
+	rez += LessSqure(l, w, h);
+	return rez;
+}
+int LessSqure(int l, int w, int h)
+{
+	return l * w < w*h&&l*w < h*l ? l * w : w * h < l*w&&w*h < h*l ? w * h : h * l;
+}
